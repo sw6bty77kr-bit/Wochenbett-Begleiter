@@ -1,0 +1,445 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><title>Wochenbett Begleiter</title><style>
+:root{
+  --bg1:#fbf7f8;
+  --bg2:#f5f2f7;
+  --card:#ffffff;
+  --text:#2b2529;
+  --muted:#7a7176;
+  --line:#e8e1e5;
+  --rose:#d9829a;
+  --rose-dark:#b95f7a;
+  --lav:#9a8bd6;
+  --lav-soft:#f0ecfb;
+  --green:#4e9a73;
+  --green-soft:#edf7f1;
+  --amber:#c88838;
+  --amber-soft:#fff5e8;
+  --red:#c95d67;
+  --red-soft:#fff0f2;
+  --blue:#6c8fcf;
+  --blue-soft:#edf3fd;
+  --shadow:0 10px 30px rgba(91,65,77,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(217,130,154,.10), transparent 30%),
+    radial-gradient(circle at 95% 10%, rgba(154,139,214,.10), transparent 28%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:calc(18px + env(safe-area-inset-top)) 16px calc(92px + env(safe-area-inset-bottom));
+}
+header{
+  padding:4px 4px 10px;
+}
+h1{
+  font-size:32px;
+  line-height:1.05;
+  margin:2px 0 6px;
+  letter-spacing:-.8px;
+  font-weight:760;
+}
+.subtitle{
+  color:var(--muted);
+  font-size:14px;
+  margin:0;
+}
+.tabs{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:10px 0 12px;
+  margin:0 -2px 2px;
+  background:rgba(250,247,249,.82);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+}
+.tabs button{
+  white-space:nowrap;
+  border:1px solid rgba(232,225,229,.9);
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.86);
+  color:#51474d;
+  font-size:14px;
+  font-weight:680;
+  box-shadow:0 2px 10px rgba(74,53,63,.04);
+}
+.tabs button.on{
+  background:linear-gradient(135deg,var(--rose),var(--lav));
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 8px 20px rgba(185,95,122,.18);
+}
+.view{display:none}
+.view.on{display:block}
+.card{
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(232,225,229,.88);
+  border-radius:22px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:var(--shadow);
+}
+.card h2{
+  font-size:18px;
+  margin:0 0 14px;
+  letter-spacing:-.2px;
+}
+.card h3{
+  font-size:15px;
+  margin:16px 0 8px;
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+label{
+  font-size:12px;
+  color:var(--muted);
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+}
+input,textarea,select{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:14px;
+  padding:12px 13px;
+  font-size:16px;
+  color:var(--text);
+  outline:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--rose);
+  box-shadow:0 0 0 4px rgba(217,130,154,.11);
+}
+button{
+  border:0;
+  border-radius:14px;
+  padding:12px 15px;
+  font-size:15px;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--rose),var(--rose-dark));
+  color:white;
+  cursor:pointer;
+  box-shadow:0 7px 16px rgba(185,95,122,.16);
+}
+button.secondary{
+  background:#f1edf0;
+  color:var(--text);
+  box-shadow:none;
+}
+button.danger{
+  background:var(--red-soft);
+  color:var(--red);
+  box-shadow:none;
+}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.actions button{flex:1;min-width:120px}
+.metric{
+  background:linear-gradient(180deg,#fff,#faf7f9);
+  border:1px solid #efe8ec;
+  border-radius:16px;
+  padding:13px;
+}
+.metric .k{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:5px;
+  font-weight:650;
+}
+.metric .v{
+  font-size:21px;
+  font-weight:760;
+  letter-spacing:-.4px;
+}
+.metric .s{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+  line-height:1.25;
+}
+.status{
+  border-radius:16px;
+  padding:13px 14px;
+  font-size:14px;
+  line-height:1.5;
+  margin-top:11px;
+  border:1px solid transparent;
+}
+.status.ok{background:var(--green-soft);color:#2f6f51;border-color:#dcefe4}
+.status.warn{background:var(--amber-soft);color:#8a5a20;border-color:#f3e2c8}
+.status.alert{background:var(--red-soft);color:#9c3d47;border-color:#f1d8dc}
+.status.info{background:var(--blue-soft);color:#4e6fa9;border-color:#dce7f8}
+.status.soft{background:var(--lav-soft);color:#6d5db4;border-color:#e4ddf5}
+.sectiontag{
+  display:inline-block;
+  border-radius:999px;
+  padding:4px 8px;
+  font-size:11px;
+  font-weight:720;
+  margin-right:5px;
+}
+.sectiontag.fixed{background:var(--blue-soft);color:#4e6fa9}
+.sectiontag.dynamic{background:var(--lav-soft);color:#6d5db4}
+.sectiontag.rec{background:var(--green-soft);color:#2f6f51}
+.sectiontag.alert{background:var(--red-soft);color:#9c3d47}
+.timeline-item{
+  padding:13px 0;
+  border-bottom:1px solid #f0eaed;
+}
+.timeline-item:last-child{border-bottom:0}
+.timeline-date{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.timeline-title{
+  font-size:15px;
+  font-weight:730;
+  margin-bottom:4px;
+}
+.timeline-text{
+  font-size:13px;
+  line-height:1.5;
+  color:#51494e;
+}
+.checkrow{
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  padding:10px 0;
+  border-bottom:1px solid #f2ecef;
+}
+.checkrow:last-child{border-bottom:0}
+.checkrow input{
+  width:21px;
+  height:21px;
+  margin-top:1px;
+  flex:0 0 auto;
+  accent-color:var(--rose-dark);
+}
+.checkrow .ct{font-size:14px;line-height:1.45}
+.checkrow .cs{font-size:12px;color:var(--muted);margin-top:2px}
+.chartbox{width:100%;overflow:hidden}
+svg{width:100%;height:auto;display:block}
+.axis{font-size:10px;fill:#8d8288}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 5px;border-bottom:1px solid #f0eaed;text-align:right;vertical-align:top}
+th:first-child,td:first-child{text-align:left}
+td.note{text-align:left;color:var(--muted);max-width:150px}
+.tag{
+  display:inline-block;
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:11px;
+  font-weight:680;
+}
+.tag.ok{background:var(--green-soft);color:#2f6f51}
+.tag.warn{background:var(--amber-soft);color:#8a5a20}
+.tag.alert{background:var(--red-soft);color:#9c3d47}
+.tag.info{background:var(--blue-soft);color:#4e6fa9}
+.iconbtn{background:transparent;color:var(--red);padding:4px 7px;font-size:13px;box-shadow:none}
+.small{font-size:12px;color:var(--muted);line-height:1.55}
+.empty{color:var(--muted);text-align:center;padding:24px 8px;font-size:14px}
+hr{border:0;border-top:1px solid #efe8ec;margin:16px 0}
+.source{font-size:11px;color:var(--muted);line-height:1.45;margin-top:8px}
+.source a{color:var(--rose-dark);text-decoration:none}
+.badge{display:inline-block;border-radius:8px;padding:2px 6px;background:#f2edf0;color:#655b61;font-size:10px;font-weight:650}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.todaylist .timeline-item{padding-top:9px}
+.footer{font-size:11px;color:var(--muted);line-height:1.55;margin:20px 4px}
+.hero-note{
+  background:linear-gradient(135deg,rgba(217,130,154,.10),rgba(154,139,214,.10));
+  border:1px solid rgba(221,207,217,.8);
+  border-radius:18px;
+  padding:14px 15px;
+  margin:4px 0 14px;
+  color:#5e5359;
+  font-size:13px;
+  line-height:1.45;
+}
+@media(max-width:560px){
+  .grid,.grid3,.two{grid-template-columns:1fr}
+  table{font-size:12px}
+  th:nth-child(5),td:nth-child(5){display:none}
+  .wrap{padding-left:13px;padding-right:13px}
+  h1{font-size:30px}
+}
+
+.settings-gear{
+  position:absolute; right:16px; top:14px; width:40px; height:40px; padding:0;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.94); color:#655b61; border:1px solid var(--line);
+  box-shadow:0 5px 16px rgba(91,65,77,.10); font-size:19px;
+}
+.settings-overlay{
+  position:fixed; inset:0; z-index:1000; display:none; align-items:flex-end;
+  justify-content:center; padding:14px; background:rgba(43,37,41,.34);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  pointer-events:none; visibility:hidden; opacity:0;
+}
+.settings-overlay.show{
+  display:flex; pointer-events:auto; visibility:visible; opacity:1;
+}
+.settings-sheet{
+  width:min(720px,100%); max-height:90vh; overflow:auto; background:#fbf9fa;
+  border-radius:28px 28px 20px 20px; padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 24px 70px rgba(58,44,51,.25);
+}
+.settings-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:2px 4px 8px}
+.settings-head h2{margin:0;font-size:23px}
+.settings-head p{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+.settings-close{
+  width:34px;height:34px;min-width:34px;padding:0;border-radius:50%;
+  background:#eee8ec;color:#655b61;box-shadow:none;font-size:20px;
+}
+.firststart-note{
+  background:linear-gradient(135deg,rgba(217,130,154,.11),rgba(154,139,214,.11));
+  border:1px solid #eadfe5;border-radius:16px;padding:12px 13px;
+  font-size:13px;line-height:1.45;color:#60565b;margin:4px 2px 12px;
+}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Wochenbett">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#fbf7f8">
+
+</head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · PWA 1.0</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="baby">Baby</button><button data-v="mama">Mama</button><button data-v="timeline">Zeitplan</button></div>
+<section id="today" class="view on"><div class="card"><h2>Heute</h2><div id="todaySummary"></div></div><div class="card"><h2>Heute relevant</h2><div id="todayTasks"></div></div></section>
+<section id="baby" class="view"><div class="card"><h2>Gewicht</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
+<section id="mama" class="view"><div class="card"><h2>Mama heute</h2><div id="mamaToday"></div></div><div class="card"><h2>Übungen und Belastung</h2><div id="exercise"></div></div><div class="card"><h2>Sectio Narbe</h2><div id="scar"></div><div class="check"><input id="scarClosed" type="checkbox" onchange="setScar()"><div class="t"><b>Narbe vollständig geschlossen, trocken und ohne Krusten?</b><div class="small">Erst dann werden Massage und Silikon als Optionen freigeschaltet.</div></div></div></div><div class="card"><h2>Wochenbett Check</h2><div id="mamaCheck"></div></div><div class="card"><h2>Ärztliche Termine</h2><div id="mamaFixed"></div></div></section>
+<section id="timeline" class="view"><div class="card"><h2>Zeitplan Baby</h2><div id="tlBaby"></div></div><div class="card"><h2>Zeitplan Mama</h2><div id="tlMama"></div></div></section>
+
+
+<div id="settingsOverlay" class="settings-overlay" aria-hidden="true">
+  <div class="settings-sheet">
+    <div class="settings-head">
+      <div>
+        <h2 id="settingsTitle">Einstellungen</h2>
+        <p id="settingsIntro">Stammdaten und App-Daten verwalten.</p>
+      </div>
+      <button id="settingsClose" class="settings-close" onclick="closeSettings()" aria-label="Schließen">×</button>
+    </div>
+    <div id="firstStartNote" class="firststart-note" style="display:none">
+      Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
+    </div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small">Alle Daten bleiben lokal im Browser.</p></div>
+  </div>
+</div>
+<p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
+<script>
+const K='wochenbett_v3';let D={profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
+try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{}}}catch(e){}
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('de-DE'),add=(s,n)=>{let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},day=s=>D.profile.dob?Math.round((new Date(s+'T12:00:00')-new Date(D.profile.dob+'T12:00:00'))/86400000):null,pct=w=>((w-+D.profile.bw)/+D.profile.bw*100),pctp=v=>(v>0?'+':'')+v.toFixed(1)+' %',save=()=>{try{localStorage.setItem(K,JSON.stringify(D));return localStorage.getItem(K)!==null}catch(e){console.error(e);return false}},src=(t,u)=>`<div class="source">Quelle: <a href="${u}" target="_blank">${t}</a></div>`;
+
+function hasProfile(){return !!(D.profile&&D.profile.dob&&D.profile.bw)}
+function openSettings(firstStart=false){
+  const ov=$('settingsOverlay'),note=$('firstStartNote'),title=$('settingsTitle'),intro=$('settingsIntro'),close=$('settingsClose');
+  if(!ov)return;
+  if(firstStart){
+    title.textContent='Willkommen';
+    intro.textContent='Einmal einrichten, danach startet die App direkt mit der Tagesübersicht.';
+    note.style.display='block';
+    close.style.display='none';
+  }else{
+    title.textContent='Einstellungen';
+    intro.textContent='Stammdaten, erledigte Untersuchungen und Sicherungen verwalten.';
+    note.style.display='none';
+    close.style.display='flex';
+  }
+  ov.style.display='flex';
+  ov.style.pointerEvents='auto';
+  ov.style.visibility='visible';
+  ov.classList.add('show');
+  ov.setAttribute('aria-hidden','false');
+}
+function closeSettings(force=false){
+  if(!force&&!hasProfile())return;
+  const ov=$('settingsOverlay');
+  if(ov){
+    ov.classList.remove('show');
+    ov.style.pointerEvents='none';
+    ov.style.visibility='hidden';
+    ov.style.display='none';
+    ov.setAttribute('aria-hidden','true');
+  }
+}
+function activateTab(id){
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v===id));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===id));
+}
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.addEventListener('click',function(e){
+    e.preventDefault();
+    activateTab(this.dataset.v);
+  });
+});
+function saveProfile(){
+  const elName=$('name'),elDob=$('dob'),elBw=$('bw'),elBtime=$('btime'),elDischarge=$('discharge'),elFeeding=$('feeding'),st=$('storageStatus');
+  if(!elDob.value||!+elBw.value){alert('Bitte Geburtsdatum und Geburtsgewicht eintragen.');return}
+  D.profile={
+    name:elName.value.trim(),
+    dob:elDob.value,
+    bw:+elBw.value,
+    btime:elBtime.value,
+    discharge:elDischarge.value,
+    feeding:elFeeding.value
+  };
+  const persisted=save();
+  try{render()}catch(e){console.error('Renderfehler nach Stammdaten:',e)}
+  if(st){
+    st.innerHTML=persisted
+      ?'<span style="color:#176b2c"><b>Gespeichert.</b> Die Stammdaten wurden dauerhaft lokal abgelegt.</span>'
+      :'<span style="color:#8a5a20"><b>Für diese Sitzung übernommen.</b> Im aktuellen Kurzbefehl-Modus können die Daten nach dem Schließen verloren gehen. Die spätere PWA behebt das.</span>';
+  }
+  closeSettings(true);
+  setTimeout(()=>activateTab('today'),0);
+}
+function addWeight(){const elDate=$('mdate'),elWeight=$('weight'),elNote=$('note');if(!D.profile.dob)return alert('Bitte zuerst die Stammdaten über das Zahnrad einrichten.');if(!elDate.value||!+elWeight.value)return alert('Datum und Gewicht eintragen.');D.weights.push({id:Date.now(),date:elDate.value,w:+elWeight.value,n:elNote.value.trim()});D.weights.sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);save();elWeight.value='';elNote.value='';render()}
+function delWeight(id){if(confirm('Messung löschen?')){D.weights=D.weights.filter(x=>x.id!==id);save();render()}}
+function weightStatus(m,i){let p=pct(m.w),d=day(m.date);if(p<-10)return['alert','Mehr als 10 % unter Geburtsgewicht: medizinische Beurteilung empfohlen.'];if(d>=20&&m.w<+D.profile.bw)return['alert','Geburtsgewicht nach 3 Wochen noch nicht erreicht: klinische Beurteilung empfohlen.'];if(d>=13&&m.w<+D.profile.bw)return['warn','Geburtsgewicht am 14. Lebenstag noch nicht erreicht: Ernährung und Verlauf gezielt prüfen.'];if(d>=4&&i>0&&m.w<=D.weights[i-1].w)return['warn','Ab dem 5. Lebenstag keine Zunahme gegenüber der letzten Messung.'];if(p<=-7)return['warn','Deutlicher Gewichtsverlust: engmaschig beobachten.'];if(d<=3&&p<0)return['info','Früher Gewichtsverlust kann physiologisch sein.'];return['ok','Nach den hinterlegten Kriterien aktuell kein Warnsignal.']}
+function planner(){if(!D.weights.length)return null;let i=D.weights.length-1,m=D.weights[i],d=day(m.date),p=pct(m.w),bw=+D.profile.bw,dec=i>0&&m.w<=D.weights[i-1].w,iv=1,l='info',r='',a='';if(p<-10){l='alert';r='Mehr als 10 % Gewichtsverlust.';a='Medizinische Beurteilung empfohlen; nicht nur weiterwiegen.'}else if(d>=20&&m.w<bw){l='alert';r='Geburtsgewicht nach 3 Wochen nicht erreicht.';a='Klinische Beurteilung empfohlen.'}else if(d>=4&&dec){l='warn';r='Keine Zunahme seit letzter Kontrolle.';a='Morgen erneut wiegen und Trinken/Ausscheidungen besonders beobachten.'}else if(p<=-7){l='warn';r='Mindestens 7 % unter Geburtsgewicht.';a='Am Folgetag kontrollieren.'}else if(d<=3){iv=1;r='Frühe Neugeborenenphase.';a='Täglich kontrollieren bis klare Trendwende.'}else if(d<=6){iv=m.w>=bw?2:1;r=m.w>=bw?'Geburtsgewicht bereits erreicht.':'Geburtsgewicht noch nicht erreicht.';a=iv===2?'In 2 Tagen kontrollieren.':'Morgen kontrollieren.'}else if(d<=13){iv=m.w>=bw?3:2;l=m.w>=bw?'ok':'info';r=m.w>=bw?'Stabiler Verlauf.':'Geburtsgewicht noch nicht erreicht.';a=`In etwa ${iv} Tagen kontrollieren.`}else if(d<=20&&m.w<bw){iv=1;l='warn';r='Geburtsgewicht zwischen Tag 15 und 21 noch nicht erreicht.';a='Engmaschig kontrollieren; am 21. Lebenstag bei weiterhin fehlender Rückkehr klinisch beurteilen.'}else if(d<=27){iv=7;l='ok';r='Unauffälliger Verlauf.';a='In etwa 1 Woche kontrollieren.'}else if(d<=84){iv=14;l='ok';r='Unauffälliger Verlauf.';a='Etwa alle 2 Wochen kontrollieren.'}else{iv=28;l='ok';r='Unauffälliger Verlauf.';a='Monatliche Zusatzkontrollen genügen.'}return{next:add(m.date,iv),iv,l,r,a,last:m.date}}
+function babyFixedItems(){if(!D.profile.dob)return[];let d=D.profile.dob;return[{k:'u1',d,title:'U1',txt:'Direkt nach der Geburt.',range:fmt(d)},{k:'k1',d,title:'Vitamin K · 1. Gabe',txt:'Üblicherweise bei U1.',range:fmt(d)},{k:'pulse',d:add(d,1),end:add(d,2),title:'Pulsoxymetrie Screening',txt:'Screening auf kritische angeborene Herzfehler.',range:`${fmt(add(d,1))} bis ${fmt(add(d,2))}`},{k:'screen',d:add(d,1),end:add(d,3),title:'Erweitertes Neugeborenen Screening',txt:'Typischer Zeitraum 36 bis 72 Stunden.',range:`36–72 Stunden nach Geburt (je nach Geburtszeit etwa ${fmt(add(d,1))} bis ${fmt(add(d,3))})`},{k:'hear',d:d,end:add(d,2),title:'Hörscreening',txt:'Bei stationärer Geburt möglichst vor Entlassung.',range:`bis 72 Stunden nach Geburt (spätestens etwa ${fmt(add(d,3))})`},{k:'u2',d:add(d,2),end:add(d,9),title:'U2',txt:'Vorgesehen am 3. bis 10. Lebenstag.',range:`${fmt(add(d,2))} bis ${fmt(add(d,9))}`},{k:'k2',d:add(d,2),end:add(d,9),title:'Vitamin K · 2. Gabe',txt:'Üblicherweise bei U2.',range:'im Rahmen der U2'},{k:'u3',d:add(d,21),end:add(d,34),title:'U3',txt:'Vorgesehen in der 4. bis 5. Lebenswoche.',range:`${fmt(add(d,21))} bis ${fmt(add(d,34))}`},{k:'k3',d:add(d,21),end:add(d,34),title:'Vitamin K · 3. Gabe',txt:'Üblicherweise bei U3.',range:'im Rahmen der U3'}]}
+function mamaFixedItems(){if(!D.profile.dob)return[];let d=D.profile.dob;return[{d:d,end:add(d,6),title:'Ärztliche Wochenbettuntersuchung',txt:'Nach Mutterschafts-Richtlinie innerhalb der ersten Woche vorgesehen; bei stationärem Verlauf prüfen, ob sie dort bereits erfolgt.',range:`${fmt(d)} bis ${fmt(add(d,6))}`},{d:add(d,42),title:'Gynäkologische Nachuntersuchung',txt:'Etwa 6 Wochen, spätestens 8 Wochen nach Geburt.',range:`${fmt(add(d,42))} bis ${fmt(add(d,56))}`}]} 
+function exerciseItems(d){if(d<=3)return[['rec','Frühmobilisation','Mehrmals kurze Gehstrecken nach Kreislauf und Schmerz.'],['rec','Fußpumpe','Sprunggelenke und Füße mehrmals täglich bewegen.'],['rec','Ruhige tiefe Atmung','Langsam atmen, ohne Pressen.'],['rec','Beckenboden wahrnehmen','Sanft anspannen und vollständig lösen.']];if(d<=14)return[['rec','Spazieren','Kurze Strecken langsam steigern.'],['rec','Beckenboden','Sanfte Aktivierung und vollständige Entspannung.'],['rec','Beckenkippung','5 bis 10 langsame Wiederholungen, nur schmerzfrei.'],['rec','Tiefe Bauchaktivierung','Sanfte Transversus Aktivierung ohne Pressen.']];if(d<=28)return[['dyn','Cat Cow','Langsam und schmerzfrei, kleiner Bewegungsumfang.'],['dyn','Kleine Bridge','Nur ohne Narbenschmerz, Druckgefühl oder stärkere Blutung.'],['dyn','Leichte Kniebeugen','Eigengewicht, kontrolliert, ohne Pressen.'],['rec','Spazieren','Dauer und Tempo graduell steigern.']];if(d<=42)return[['dyn','Bridge Progression','Nur symptomfrei steigern.'],['dyn','Rumpfstabilisation','Einfache kontrollierte Übungen ohne Pressen.'],['dyn','Ergometer leicht','Wenn Sitzen angenehm und Wunde unauffällig ist.'],['dyn','Leichte Widerstände','Niedrige Last, saubere Kontrolle.']];if(d<=56)return[['rec','Low Impact Training','Umfang graduell steigern.'],['dyn','Krafttraining leicht bis moderat','Symptomorientiert steigern.'],['rec','Beckenboden weitertrainieren','Kontinenz und Druckgefühl beobachten.']];return[['rec','Training graduell aufbauen','Belastung schrittweise steigern.'],['dyn','High Impact nicht nur nach Kalender','Joggen und Sprungbelastung erst bei ausreichender Beckenbodenfunktion.'],['dyn','Bei Symptomen keine Progression','Inkontinenz, Druckgefühl, Schmerzen oder deutliches Doming sprechen gegen weitere Steigerung.']]}
+function check(key,title){let k=key+'_'+today();return`<div class="check"><input type="checkbox" ${D.checks[k]?'checked':''} onchange="D.checks['${k}']=this.checked;save()"><div class="t">${title}</div></div>`}
+function render(){$('scarClosed').checked=!!D.state.scar;$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=$('mdate').value||today();renderToday();renderWeight();renderBabyCheck();renderBabyFixed();renderHospital();renderMama();renderTimeline()}
+function renderToday(){let d=day(today());if(d===null){$('todaySummary').innerHTML=$('todayTasks').innerHTML='<div class="empty">Bitte zuerst die Stammdaten einrichten.</div>';return}$('headsub').textContent=`${D.profile.name||'Baby'} · Lebenstag ${d+1} · Mama postop. Tag ${d}`;let last=D.weights.at(-1);$('todaySummary').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Baby</div><div class="v">Lebenstag ${d+1}</div><div class="s">${fmt(today())}</div></div><div class="metric"><div class="k">Letztes Gewicht</div><div class="v">${last?last.w+' g':'–'}</div><div class="s">${last?fmt(last.date):'noch keine Messung'}</div></div><div class="metric"><div class="k">Mama</div><div class="v">postop. Tag ${d}</div><div class="s">nach Sectio</div></div></div>`;let it=[],p=planner();if(p&&p.next<=today())it.push(['dyn','BABY · Gewichtskontrolle',p.a]);if(d<=13)it.push(['rec','BABY · Tagescheck','Trinken, Ausscheidungen, Wachheit, Ikterus, Nabel und Temperatur kurz prüfen.']);babyFixedItems().forEach(x=>{let due=today()>=x.d&&today()<=(x.end||x.d);if(due&&!D.hospital[x.k])it.push(['fixed','BABY · '+x.title,(x.range?x.range+' · ':'')+x.txt])});if(d<=13)it.push(['rec','MAMA · Wochenbett Check','Blutung, Wunde und relevante Warnzeichen kurz prüfen.']);exerciseItems(d).slice(0,2).forEach(x=>it.push([x[0],'MAMA · '+x[1],x[2]]));$('todayTasks').innerHTML=it.map(x=>`<div class="item"><span class="pill ${x[0]}">${x[0]==='fixed'?'Fixtermin':x[0]==='dyn'?'Dynamisch':'Empfehlung'}</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')}
+function renderWeight(){if(!D.weights.length){$('weightSummary').innerHTML=$('weighPlanner').innerHTML=$('chart').innerHTML=$('history').innerHTML='<div class="empty">Noch keine Messung.</div>';return}let i=D.weights.length-1,m=D.weights[i],st=weightStatus(m,i),p=pct(m.w);$('weightSummary').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Aktuell</div><div class="v">${m.w} g</div><div class="s">Lebenstag ${day(m.date)+1}</div></div><div class="metric"><div class="k">Seit Geburt</div><div class="v">${pctp(p)}</div><div class="s">${m.w-+D.profile.bw} g</div></div><div class="metric"><div class="k">Status</div><div class="v">${st[0]==='alert'?'Abklärung':st[0]==='warn'?'Hinweis':'OK'}</div></div></div><div class="status ${st[0]}">${st[1]}</div>`;let pl=planner();$('weighPlanner').innerHTML=`<div class="status ${pl.l}"><b>Nächste Kontrolle: ${fmt(pl.next)}</b><br>${pl.r}<br>${pl.a}</div>${src('NICE Postnatal Care · Warnschwellen','https://www.nice.org.uk/guidance/ng194/chapter/recommendations')}<div class="small">Das konkrete Wiegeintervall ist eine konservative App-Empfehlung und keine NICE-Vorgabe.</div>`;let pts=D.weights.map(x=>({x:day(x.date),y:x.w}));if(!pts.some(x=>x.x===0))pts.unshift({x:0,y:+D.profile.bw});let maxX=Math.max(21,...pts.map(x=>x.x)),minY=Math.min(+D.profile.bw,...pts.map(x=>x.y))-100,maxY=Math.max(+D.profile.bw,...pts.map(x=>x.y))+100,W=680,H=300,L=50,R=20,T=15,B=38,sx=x=>L+x/maxX*(W-L-R),sy=y=>T+(maxY-y)/(maxY-minY)*(H-T-B),path=pts.map((q,j)=>(j?'L':'M')+sx(q.x)+','+sy(q.y)).join(' ');$('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}"><line x1="${L}" y1="${sy(+D.profile.bw)}" x2="${W-R}" y2="${sy(+D.profile.bw)}" stroke="#888" stroke-dasharray="6 5"/><path d="${path}" fill="none" stroke="#007aff" stroke-width="3"/>${pts.map(q=>`<circle cx="${sx(q.x)}" cy="${sy(q.y)}" r="4" fill="#007aff"/>`).join('')}</svg>`;$('history').innerHTML=`<table><tr><th>Datum</th><th>Lebenstag</th><th>Gewicht</th><th>%</th><th></th></tr>${[...D.weights].reverse().map(x=>`<tr><td>${fmt(x.date)}</td><td>${day(x.date)+1}</td><td>${x.w} g</td><td>${pctp(pct(x.w))}</td><td><button class="danger" onclick="delWeight(${x.id})">×</button></td></tr>`).join('')}</table>`}
+function renderBabyCheck(){let d=day(today());$('babyCheck').innerHTML=d===null?'<div class="empty">Geburtsdatum fehlt.</div>':d>13?'<div class="status ok">Täglicher Routinecheck nach dem 14. Lebenstag standardmäßig beendet.</div>':check('bf','Trinkt wie gewohnt?')+check('bw','Nasse Windeln unauffällig?')+check('bs','Stuhlgang altersentsprechend?')+check('ba','Wachheit und Erweckbarkeit unauffällig?')+check('bj','Keine zunehmende Gelbfärbung?')+check('bn','Nabel reizlos?')+check('bt','Keine auffällige Temperatur?')+`<div class="status warn"><b>Wichtig:</b> Die Häkchen dokumentieren nur unauffällige Beobachtungen. Eine nicht gesetzte Box wird nicht automatisch als Warnsignal interpretiert. Bei tatsächlich auffälligem Befund medizinisch beurteilen lassen.</div>`+src('NICE Postnatal Care','https://www.nice.org.uk/guidance/ng194/chapter/recommendations')}
+
+function renderBabyFixed(){document.getElementById('babyFixed').innerHTML=babyFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+src('G-BA Kinder-Richtlinie','https://www.g-ba.de/richtlinien/15/')}
+function renderHospital(){$('hospital').innerHTML=[['u1','U1'],['pulse','Pulsoxymetrie'],['screen','Neugeborenen Screening'],['hear','Hörscreening'],['u2','U2'],['k1','Vitamin K 1'],['k2','Vitamin K 2']].map(x=>`<div class="check"><input type="checkbox" ${D.hospital[x[0]]?'checked':''} onchange="D.hospital['${x[0]}']=this.checked;save();render()"><div class="t">${x[1]}</div></div>`).join('')}
+function renderMama(){let d=day(today());if(d===null){['mamaToday','exercise','scar','mamaCheck','mamaFixed'].forEach(id=>$(id).innerHTML='<div class="empty">Geburtsdatum fehlt.</div>');return}$('mamaToday').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Postoperativer Tag</div><div class="v">${d}</div></div><div class="metric"><div class="k">Narbe</div><div class="v" style="font-size:17px">${D.state.scar?'verheilt markiert':'nicht freigegeben'}</div></div><div class="metric"><div class="k">Belastung</div><div class="v" style="font-size:17px">${d<14?'sanft':d<42?'graduell':'progressiv'}</div></div></div>`;document.getElementById('exercise').innerHTML=exerciseItems(d).map(x=>`<div class="item"><span class="pill ${x[0]}">${x[0]==='dyn'?'Pragmatisch':'Empfehlung'}</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')+src('ACOG Postpartum Exercise','https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2020/04/physical-activity-and-exercise-during-pregnancy-and-the-postpartum-period');$('scar').innerHTML=`<div class="item"><span class="pill rec">Empfehlung</span><div class="title">Wunde täglich ansehen</div><div class="text">Sanft reinigen, trocken halten und auf zunehmende Rötung, Sekretion, Schmerzen oder Dehiszenz achten.</div></div>${D.state.scar?'<div class="status ok"><b>Massage/Silikon freigeschaltet.</b> Sanfte Narbenmobilisation vorsichtig möglich. Silikongel oder Silikonauflage nur auf vollständig intakter Haut; präventiver Nutzen ist möglich, aber nicht sicher belegt.</div>':'<div class="status info"><b>Massage und Silikon noch nicht freigeschaltet.</b> Entscheidend ist der Wundstatus, nicht ein fixes Datum.</div>'}${src('NICE Caesarean Birth','https://www.nice.org.uk/guidance/ng192/chapter/recommendations')}${src('CUH Silicone for scars','https://www.cuh.nhs.uk/patient-information/silicone-for-scars/')}`;$('mamaCheck').innerHTML=d<=13||d%7===0?check('mb','Blutung/Wochenfluss unauffällig?')+check('mw','Wunde unauffällig?')+check('mt','Keine Fieberzeichen?')+check('ml','Keine einseitige Beinschwellung oder Wadenschmerzen?')+check('mr','Keine Atemnot oder Thoraxschmerzen?')+check('mh','Keine starken ungewöhnlichen Kopfschmerzen/Sehstörungen?')+check('mu','Wasserlassen unauffällig?')+check('mc','Keine deutlichen Brustentzündungszeichen?')+check('mm','Psychisches Befinden insgesamt tragbar?')+`<div class="status warn"><b>Wichtig:</b> Bei starker Blutung, Atemnot/Thoraxschmerz, einseitiger Beinschwellung, Fieber mit Krankheitsgefühl oder neurologischen Warnzeichen nicht auf den nächsten App-Termin warten.</div>`+src('NICE Postnatal Care','https://www.nice.org.uk/guidance/ng194/chapter/recommendations'):'<div class="status info">Heute kein geplanter Routinecheck. Bei Beschwerden jederzeit unabhängig vom Kalender reagieren.</div>';document.getElementById('mamaFixed').innerHTML=mamaFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+src('G-BA Mutterschafts-Richtlinie','https://www.g-ba.de/richtlinien/19/')}
+function setScar(){D.state.scar=$('scarClosed').checked;save();render()}
+function renderTimeline(){if(!D.profile.dob){$('tlBaby').innerHTML=$('tlMama').innerHTML='<div class="empty">Geburtsdatum fehlt.</div>';return}let p=planner();$('tlBaby').innerHTML=babyFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+(p?`<div class="item"><div class="date">${fmt(p.next)}</div><span class="pill dyn">Dynamisch</span><div class="title">Nächste Gewichtskontrolle</div><div class="text">${p.a}</div></div>`:'');let d=D.profile.dob;$('tlMama').innerHTML=mamaFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+[[0,'Mobilisation beginnen','Frühmobilisation, Atmung, Fußpumpe und sehr sanfte Beckenbodenwahrnehmung.'],[7,'Sanfte Rückbildungsübungen','Beckenkippung, tiefe Bauchaktivierung und Spaziergänge graduell steigern.'],[14,'Funktionelle Progression','Cat Cow, kleine Bridge und leichte Kniebeugen bei unkompliziertem Verlauf vorsichtig testen.'],[28,'Low Impact ausbauen','Ergometer und leichte Widerstandsübungen bei Beschwerdefreiheit möglich.'],[42,'Belastung neu bewerten','Nach gynäkologischer Kontrolle und bei unauffälligem Verlauf Trainingsumfang weiter steigern.']].map(x=>`<div class="item"><div class="date">${fmt(add(d,x[0]))}</div><span class="pill dyn">Dynamisch</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')}
+function exportJSON(){let b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='wochenbett-backup.json';a.click()}
+function exportCSV(){let rows=[['Datum','Lebenstag','Gewicht_g','Abweichung_%','Notiz'],...D.weights.map(x=>[x.date,day(x.date)+1,x.w,pct(x.w).toFixed(2),x.n||''])],csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(';')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='babygewicht.csv';a.click()}
+function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{try{D=JSON.parse(r.result);save();location.reload()}catch(e){alert('Backup konnte nicht gelesen werden.')}};r.readAsText(f)}function resetAll(){if(confirm('Wirklich alle Daten löschen?')){localStorage.removeItem(K);location.reload()}}
+$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=today();$('scarClosed').checked=!!D.state.scar;render();if(!hasProfile())setTimeout(()=>openSettings(true),80);
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      console.error('Service Worker Registrierung fehlgeschlagen:', err);
+    });
+  });
+}
+</script>
+
+</body></html>
