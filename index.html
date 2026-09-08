@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#fbf7f8"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><title>Wochenbett Begleiter</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="4.0"><title>Wochenbett Begleiter</title><style>
 :root{
   --bg1:#fbf7f8;
   --bg2:#f5f2f7;
@@ -664,12 +664,18 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
 #backupReminder{position:fixed;z-index:1100;left:12px;right:12px;bottom:16px;max-width:732px;margin:auto;padding:12px 16px;border:2px solid #b95f7a;border-radius:18px;background:#fff5e8;box-shadow:0 6px 28px rgba(43,37,41,.22)}
 #backupReminder p{margin:0 0 8px;font-size:14px;font-weight:700;color:#713b50}
 #backupReminder button{width:100%;min-height:48px;background:#a84b68;color:#fff}
+#backupReminder .backup-actions{display:grid;grid-template-columns:1fr;gap:8px}
+#backupReminder button.secondary{background:#fff;color:#713b50;border:1px solid #d7aabd}
 body.backup-pending .wrap{padding-bottom:calc(220px + env(safe-area-inset-bottom))}
 body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-inset-bottom))}
 @media(max-width:600px){#backupReminder{bottom:calc(80px + env(safe-area-inset-bottom))}body.iphone-keyboard #backupReminder{bottom:8px}}
-</style></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v3.21</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
-<section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
-<section id="baby" class="view"><div class="section-kicker">Baby</div><div class="card"><h2>Gewicht</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
+
+.quickgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quickgrid button{min-height:54px}.countergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.counter{text-align:center;background:var(--lav-soft);border-radius:16px;padding:12px 6px}.counter b{display:block;font-size:23px}.storage-ok{color:#176b2c}.storage-warn{color:#8a5a20}@media(max-width:380px){.quickgrid{grid-template-columns:1fr}}
+</style><link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b86b8a">
+</head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v4.0</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
+<section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div><div id="wakeStatus" style="margin-top:12px"></div></div><div class="card"><h2>Schnell erfassen</h2><div class="quickgrid"><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('weight').focus(),50)">⚖︎ Gewicht</button><button class="secondary" onclick="quickFeed()">Stillmahlzeit</button><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button><button class="secondary" onclick="activateTab('mamaAnalgesia')">Analgesie</button><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('babyCheck').scrollIntoView({behavior:'smooth'}),50)">Baby-Check</button></div><div id="todayQuickStats"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
+<section id="baby" class="view"><div class="section-kicker">Baby</div><div class="card"><h2>Gewicht</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>Stillen &amp; Ausscheidungen</h2><p class="small">Bewusst schlank: ein Tap dokumentiert Zeitpunkt und Ereignis. Bei Stillmahlzeiten kann optional die Seite gewählt werden.</p><div class="quickgrid"><button class="secondary" onclick="quickFeed()">Stillmahlzeit</button><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button></div><div id="babyLogSummary"></div><div id="babyLogHistory"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
 <section id="mamaAnalgesia" class="view"><div class="section-kicker">Mama: Analgesie</div><!-- analgesia-module-start -->
 <div class="card" id="analgesia">
   <div class="an-heading"><div><div class="section-kicker">Nach Sectio</div><h2>Schmerz &amp; Analgesie</h2></div><span class="pill dyn">Testansicht</span></div>
@@ -721,14 +727,69 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
     <div id="firstStartNote" class="firststart-note" style="display:none">
       Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
     </div>
-    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>iPhone-Hinweis:</b> Wird diese HTML-Datei direkt aus „Dateien“ in Safari geöffnet, ist der Browserspeicher nicht zuverlässig dauerhaft. Für eine sichere Aufbewahrung nach Änderungen „Backup exportieren“ wählen und im Teilen-Menü <b>In Dateien sichern</b>. Ein Backup wird ohne Neuladen wieder eingelesen.</p></div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v4.0</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
   </div>
 </div>
 <p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
 <script>
-const K='wochenbett_v3';let D={profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
-try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{}}}catch(e){}
-const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('de-DE'),add=(s,n)=>{let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},day=s=>D.profile.dob?Math.round((new Date(s+'T12:00:00')-new Date(D.profile.dob+'T12:00:00'))/86400000):null,pct=w=>((w-+D.profile.bw)/+D.profile.bw*100),pctp=v=>(v>0?'+':'')+v.toFixed(1)+' %',save=()=>{if(typeof refreshBackup==='function')refreshBackup();try{localStorage.setItem(K,JSON.stringify(D));return localStorage.getItem(K)!==null}catch(e){console.error(e);return false}},src=(t,u)=>`<div class="source">Quelle: <a href="${u}" target="_blank">${t}</a></div>`;
+const APP_VERSION='4.0';
+const K='wochenbett_v3';const DATA_VERSION=2;let D={dataVersion:DATA_VERSION,profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],babyLog:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
+try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{},babyLog:Array.isArray(x.babyLog)?x.babyLog:[]}}catch(e){}
+// Datenmigration: alte v3.x-Daten bleiben kompatibel; neue Felder werden ergänzt.
+if(!Number.isFinite(D.dataVersion)||D.dataVersion<DATA_VERSION){D.dataVersion=DATA_VERSION;if(!Array.isArray(D.babyLog))D.babyLog=[];}
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('de-DE'),add=(s,n)=>{let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},day=s=>D.profile.dob?Math.round((new Date(s+'T12:00:00')-new Date(D.profile.dob+'T12:00:00'))/86400000):null,pct=w=>((w-+D.profile.bw)/+D.profile.bw*100),pctp=v=>(v>0?'+':'')+v.toFixed(1)+' %',save=()=>{if(typeof refreshBackup==='function')refreshBackup();try{localStorage.setItem(K,JSON.stringify(D));localStorage.setItem(K+'_lastSaved',String(Date.now()));if(typeof renderStorageStatus==='function')renderStorageStatus();return localStorage.getItem(K)!==null}catch(e){console.error(e);if(typeof renderStorageStatus==='function')renderStorageStatus(false);return false}},src=(t,u)=>`<div class="source">Quelle: <a href="${u}" target="_blank">${t}</a></div>`;
+
+
+async function checkForAppUpdate(){
+  const status=$('updateStatus'),btn=$('applyUpdateBtn');
+  if(btn)btn.style.display='none';
+  if(location.protocol==='file:'||location.protocol==='data:'){
+    if(status)status.textContent='Die Updateprüfung funktioniert nach Veröffentlichung über GitHub Pages.';
+    return;
+  }
+  if(status)status.textContent='Prüfe auf neue Version …';
+  try{
+    if('serviceWorker' in navigator){
+      const reg=await navigator.serviceWorker.getRegistration();
+      if(reg)await reg.update();
+    }
+    const url=new URL('./index.html',location.href);
+    url.searchParams.set('_update',Date.now().toString());
+    const res=await fetch(url.href,{cache:'no-store'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const html=await res.text();
+    const m=html.match(/<meta\s+name=["']app-version["']\s+content=["']([^"']+)["']/i)||html.match(/<meta\s+content=["']([^"']+)["']\s+name=["']app-version["']/i);
+    const remote=m&&m[1];
+    if(!remote){if(status)status.textContent='Die veröffentlichte Versionsnummer konnte nicht gelesen werden.';return;}
+    if(remote===APP_VERSION){
+      if(status)status.textContent='Aktuell: v'+APP_VERSION+'. Es ist keine neuere veröffentlichte Version vorhanden.';
+    }else{
+      if(status)status.textContent='Neue Version v'+remote+' ist veröffentlicht.';
+      if(btn){btn.style.display='inline-flex';btn.dataset.remoteVersion=remote;}
+    }
+  }catch(err){
+    console.error(err);
+    if(status)status.textContent='Updateprüfung derzeit nicht möglich. Internetverbindung prüfen und später erneut versuchen.';
+  }
+}
+
+async function applyAppUpdate(){
+  const status=$('updateStatus');
+  try{const b=Number(localStorage.getItem(K+'_lastBackupAt'));if(!b||Date.now()-b>86400000){if(!confirm('Das letzte JSON-Backup ist älter als 24 Stunden oder fehlt. Update trotzdem laden?'))return;}}catch(e){}
+  if(status)status.textContent='Neue Version wird geladen …';
+  try{
+    if('serviceWorker' in navigator){
+      const reg=await navigator.serviceWorker.getRegistration();
+      if(reg){
+        await reg.update();
+        if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
+      }
+    }
+  }catch(err){console.error(err)}
+  const url=new URL(location.href);
+  url.searchParams.set('_reload',Date.now().toString());
+  location.replace(url.href);
+}
 
 function hasProfile(){return !!(D.profile&&D.profile.dob&&D.profile.bw)}
 function openSettings(firstStart=false){
@@ -801,8 +862,34 @@ function babyFixedItems(){if(!D.profile.dob)return[];let d=D.profile.dob;return[
 function mamaFixedItems(){if(!D.profile.dob)return[];let d=D.profile.dob;return[{d:d,end:add(d,6),title:'Ärztliche Wochenbettuntersuchung',txt:'Nach Mutterschafts-Richtlinie innerhalb der ersten Woche vorgesehen; bei stationärem Verlauf prüfen, ob sie dort bereits erfolgt.',range:`${fmt(d)} bis ${fmt(add(d,6))}`},{d:add(d,42),title:'Gynäkologische Nachuntersuchung',txt:'Etwa 6 Wochen, spätestens 8 Wochen nach Geburt.',range:`${fmt(add(d,42))} bis ${fmt(add(d,56))}`}]} 
 function exerciseItems(d){if(d<=3)return[['rec','Frühmobilisation','Mehrmals kurze Gehstrecken nach Kreislauf und Schmerz.'],['rec','Fußpumpe','Sprunggelenke und Füße mehrmals täglich bewegen.'],['rec','Ruhige tiefe Atmung','Langsam atmen, ohne Pressen.'],['rec','Beckenboden wahrnehmen','Sanft anspannen und vollständig lösen.']];if(d<=14)return[['rec','Spazieren','Kurze Strecken langsam steigern.'],['rec','Beckenboden','Sanfte Aktivierung und vollständige Entspannung.'],['rec','Beckenkippung','5 bis 10 langsame Wiederholungen, nur schmerzfrei.'],['rec','Tiefe Bauchaktivierung','Sanfte Transversus Aktivierung ohne Pressen.']];if(d<=28)return[['dyn','Cat Cow','Langsam und schmerzfrei, kleiner Bewegungsumfang.'],['dyn','Kleine Bridge','Nur ohne Narbenschmerz, Druckgefühl oder stärkere Blutung.'],['dyn','Leichte Kniebeugen','Eigengewicht, kontrolliert, ohne Pressen.'],['rec','Spazieren','Dauer und Tempo graduell steigern.']];if(d<=42)return[['dyn','Bridge Progression','Nur symptomfrei steigern.'],['dyn','Rumpfstabilisation','Einfache kontrollierte Übungen ohne Pressen.'],['dyn','Ergometer leicht','Wenn Sitzen angenehm und Wunde unauffällig ist.'],['dyn','Leichte Widerstände','Niedrige Last, saubere Kontrolle.']];if(d<=56)return[['rec','Low Impact Training','Umfang graduell steigern.'],['dyn','Krafttraining leicht bis moderat','Symptomorientiert steigern.'],['rec','Beckenboden weitertrainieren','Kontinenz und Druckgefühl beobachten.']];return[['rec','Training graduell aufbauen','Belastung schrittweise steigern.'],['dyn','High Impact nicht nur nach Kalender','Joggen und Sprungbelastung erst bei ausreichender Beckenbodenfunktion.'],['dyn','Bei Symptomen keine Progression','Inkontinenz, Druckgefühl, Schmerzen oder deutliches Doming sprechen gegen weitere Steigerung.']]}
 function check(key,title){let k=key+'_'+today();return`<div class="check"><input type="checkbox" ${D.checks[k]?'checked':''} onchange="D.checks['${k}']=this.checked;save()"><div class="t">${title}</div></div>`}
-function render(){$('scarClosed').checked=!!D.state.scar;$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=$('mdate').value||today();renderToday();renderWeight();renderBabyCheck();renderBabyFixed();renderHospital();renderMama();renderTimeline()}
-function renderToday(){let d=day(today());if(d===null){$('todaySummary').innerHTML=$('todayTasks').innerHTML='<div class="empty">Bitte zuerst die Stammdaten einrichten.</div>';return}$('headsub').textContent=`${D.profile.name||'Baby'} · Lebenstag ${d+1} · Mama postop. Tag ${d}`;let last=D.weights.at(-1);$('todaySummary').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Baby</div><div class="v">Lebenstag ${d+1}</div><div class="s">${fmt(today())}</div></div><div class="metric"><div class="k">Letztes Gewicht</div><div class="v">${last?last.w+' g':'–'}</div><div class="s">${last?fmt(last.date):'noch keine Messung'}</div></div><div class="metric"><div class="k">Mama</div><div class="v">postop. Tag ${d}</div><div class="s">nach Sectio</div></div></div>`;let it=[],p=planner();if(p&&p.next<=today())it.push(['dyn','BABY · Gewichtskontrolle',p.a]);if(d<=13)it.push(['rec','BABY · Tagescheck','Trinken, Ausscheidungen, Wachheit, Ikterus, Nabel und Temperatur kurz prüfen.']);babyFixedItems().forEach(x=>{let due=today()>=x.d&&today()<=(x.end||x.d);if(due&&!D.hospital[x.k])it.push(['fixed','BABY · '+x.title,(x.range?x.range+' · ':'')+x.txt])});if(d<=13)it.push(['rec','MAMA · Wochenbett Check','Blutung, Wunde und relevante Warnzeichen kurz prüfen.']);exerciseItems(d).slice(0,2).forEach(x=>it.push([x[0],'MAMA · '+x[1],x[2]]));$('todayTasks').innerHTML=it.map(x=>`<div class="item"><span class="pill ${x[0]}">${x[0]==='fixed'?'Fixtermin':x[0]==='dyn'?'Dynamisch':'Empfehlung'}</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')}
+function render(){$('scarClosed').checked=!!D.state.scar;$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=$('mdate').value||today();renderToday();renderWeight();renderBabyCheck();renderBabyFixed();renderHospital();renderMama();renderTimeline();renderBabyLog();renderWakeStatus();renderStorageStatus()}
+function quickFeed(){
+  const side=prompt('Stillmahlzeit: Seite optional eingeben (L, R, beide). Leer = ohne Angabe.','');
+  if(side===null)return;const v=side.trim().toLowerCase();let norm='';if(['l','links'].includes(v))norm='links';else if(['r','rechts'].includes(v))norm='rechts';else if(['beide','b'].includes(v))norm='beide';
+  D.babyLog.push({id:Date.now()+Math.random(),type:'feed',time:Date.now(),side:norm});save();renderBabyLog();renderToday();
+}
+function quickDiaper(type){D.babyLog.push({id:Date.now()+Math.random(),type,time:Date.now()});save();renderBabyLog();renderToday();}
+function delBabyLog(id){if(confirm('Eintrag löschen?')){D.babyLog=D.babyLog.filter(x=>x.id!==id);save();renderBabyLog();renderToday();}}
+function recentBabyLog(hours=24){const t=Date.now()-hours*3600000;return (D.babyLog||[]).filter(x=>x.time>=t);}
+function renderBabyLog(){
+  const r=recentBabyLog(),feeds=r.filter(x=>x.type==='feed'),wet=r.filter(x=>x.type==='wet'),stool=r.filter(x=>x.type==='stool');
+  const stats=`<div class="countergrid"><div class="counter"><b>${feeds.length}</b>Stillmahlzeiten<br><span class="small">24 h</span></div><div class="counter"><b>${wet.length}</b>nass<br><span class="small">24 h</span></div><div class="counter"><b>${stool.length}</b>Stuhl<br><span class="small">24 h</span></div></div>`;
+  if($('babyLogSummary'))$('babyLogSummary').innerHTML=stats;
+  if($('todayQuickStats'))$('todayQuickStats').innerHTML=stats;
+  if($('babyLogHistory'))$('babyLogHistory').innerHTML=[...(D.babyLog||[])].sort((a,b)=>b.time-a.time).slice(0,30).map(x=>`<div class="item"><div class="title">${x.type==='feed'?'Stillmahlzeit'+(x.side?' · '+x.side:''):x.type==='wet'?'Nasse Windel':'Stuhl'}</div><div class="text">${new Date(x.time).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div><button class="danger" onclick="delBabyLog(${x.id})">×</button></div>`).join('')||'<div class="empty">Noch keine Einträge.</div>';
+}
+function renderWakeStatus(){
+  const el=$('wakeStatus');if(!el||!D.profile.dob||!D.profile.bw){if(el)el.innerHTML='';return}const last=D.weights.at(-1),d=day(today());
+  if(!last){el.innerHTML='<div class="status info"><b>Stillrhythmus:</b> In der frühen Neugeborenenphase regelmäßig Stillen anbieten; für eine verlaufsabhängige Empfehlung zunächst Gewicht dokumentieren.</div>';return}
+  const regained=last.w>=Number(D.profile.bw), recentGain=D.weights.length<2||last.w>D.weights.at(-2).w;
+  el.innerHTML=regained&&recentGain&&d>=3?'<div class="status ok"><b>Stillrhythmus:</b> Geburtsgewicht erreicht und letzter Gewichtstrend unauffällig. Bei effektivem Stillen, normaler Ausscheidung und gesundem Gesamteindruck ist routinemäßiges Wecken allein wegen eines festen Zeitintervalls meist nicht mehr erforderlich.</div>':'<div class="status info"><b>Stillrhythmus:</b> Geburtsgewicht noch nicht sicher mit unauffälligem Trend erreicht. Weiter regelmäßig Stillen anbieten und in der frühen Phase bei längeren Schlafintervallen zum Trinken wecken.</div>';
+}
+function renderStorageStatus(force){
+  const el=$('storageOverview');if(!el)return;let saved=null,backup=null;try{saved=Number(localStorage.getItem(K+'_lastSaved'))||null;backup=Number(localStorage.getItem(K+'_lastBackupAt'))||null}catch(e){}
+  const f=t=>t?new Date(t).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'noch nicht';
+  el.innerHTML=`<div class="title ${force===false?'storage-warn':'storage-ok'}">${force===false?'Browserspeicher derzeit nicht verfügbar':'Automatische lokale Speicherung aktiv'}</div><div class="text">Zuletzt lokal gespeichert: <b>${f(saved)}</b><br>Letztes JSON-Backup: <b>${f(backup)}</b><br><span class="small">Datenstruktur v${D.dataVersion||1}</span></div>`;
+}
+function renderToday(){renderBabyLog();renderWakeStatus();let d=day(today());if(d===null){$('todaySummary').innerHTML=$('todayTasks').innerHTML='<div class="empty">Bitte zuerst die Stammdaten einrichten.</div>';return}$('headsub').textContent=`${D.profile.name||'Baby'} · Lebenstag ${d+1} · Mama postop. Tag ${d}`;let last=D.weights.at(-1);$('todaySummary').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Baby</div><div class="v">Lebenstag ${d+1}</div><div class="s">${fmt(today())}</div></div><div class="metric"><div class="k">Letztes Gewicht</div><div class="v">${last?last.w+' g':'–'}</div><div class="s">${last?fmt(last.date):'noch keine Messung'}</div></div><div class="metric"><div class="k">Mama</div><div class="v">postop. Tag ${d}</div><div class="s">nach Sectio</div></div></div>`;let it=[],p=planner();if(p&&p.next<=today())it.push(['dyn','BABY · Gewichtskontrolle',p.a]);if(d<=13)it.push(['rec','BABY · Tagescheck','Trinken, Ausscheidungen, Wachheit, Ikterus, Nabel und Temperatur kurz prüfen.']);babyFixedItems().forEach(x=>{let due=today()>=x.d&&today()<=(x.end||x.d);if(due&&!D.hospital[x.k])it.push(['fixed','BABY · '+x.title,(x.range?x.range+' · ':'')+x.txt])});if(d<=13)it.push(['rec','MAMA · Wochenbett Check','Blutung, Wunde und relevante Warnzeichen kurz prüfen.']);exerciseItems(d).slice(0,2).forEach(x=>it.push([x[0],'MAMA · '+x[1],x[2]]));$('todayTasks').innerHTML=it.map(x=>`<div class="item"><span class="pill ${x[0]}">${x[0]==='fixed'?'Fixtermin':x[0]==='dyn'?'Dynamisch':'Empfehlung'}</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')}
 function renderWeight(){if(!D.weights.length){$('weightSummary').innerHTML=$('weighPlanner').innerHTML=$('chart').innerHTML=$('history').innerHTML='<div class="empty">Noch keine Messung.</div>';return}let i=D.weights.length-1,m=D.weights[i],st=weightStatus(m,i),p=pct(m.w);$('weightSummary').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Aktuell</div><div class="v">${m.w} g</div><div class="s">Lebenstag ${day(m.date)+1}</div></div><div class="metric"><div class="k">Seit Geburt</div><div class="v">${pctp(p)}</div><div class="s">${m.w-+D.profile.bw} g</div></div><div class="metric"><div class="k">Status</div><div class="v">${st[0]==='alert'?'Abklärung':st[0]==='warn'?'Hinweis':'OK'}</div></div></div><div class="status ${st[0]}">${st[1]}</div>`;let pl=planner();$('weighPlanner').innerHTML=`<div class="status ${pl.l}"><b>Nächste Kontrolle: ${fmt(pl.next)}</b><br>${pl.r}<br>${pl.a}</div>${src('NICE Postnatal Care · Warnschwellen','https://www.nice.org.uk/guidance/ng194/chapter/recommendations')}<div class="small">Das konkrete Wiegeintervall ist eine konservative App-Empfehlung und keine NICE-Vorgabe.</div>`;let pts=D.weights.map(x=>({x:day(x.date),y:x.w}));if(!pts.some(x=>x.x===0))pts.unshift({x:0,y:+D.profile.bw});let maxX=Math.max(21,...pts.map(x=>x.x)),minY=Math.min(+D.profile.bw,...pts.map(x=>x.y))-100,maxY=Math.max(+D.profile.bw,...pts.map(x=>x.y))+100,W=680,H=300,L=50,R=20,T=15,B=38,sx=x=>L+x/maxX*(W-L-R),sy=y=>T+(maxY-y)/(maxY-minY)*(H-T-B),path=pts.map((q,j)=>(j?'L':'M')+sx(q.x)+','+sy(q.y)).join(' ');$('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}"><line x1="${L}" y1="${sy(+D.profile.bw)}" x2="${W-R}" y2="${sy(+D.profile.bw)}" stroke="#888" stroke-dasharray="6 5"/><path d="${path}" fill="none" stroke="#007aff" stroke-width="3"/>${pts.map(q=>`<circle cx="${sx(q.x)}" cy="${sy(q.y)}" r="4" fill="#007aff"/>`).join('')}</svg>`;$('history').innerHTML=`<table><tr><th>Datum</th><th>Lebenstag</th><th>Gewicht</th><th>%</th><th></th></tr>${[...D.weights].reverse().map(x=>`<tr><td>${fmt(x.date)}</td><td>${day(x.date)+1}</td><td>${x.w} g</td><td>${pctp(pct(x.w))}</td><td><button class="danger" onclick="delWeight(${x.id})">×</button></td></tr>`).join('')}</table>`}
 function renderBabyCheck(){let d=day(today());$('babyCheck').innerHTML=d===null?'<div class="empty">Geburtsdatum fehlt.</div>':d>13?'<div class="status ok">Täglicher Routinecheck nach dem 14. Lebenstag standardmäßig beendet.</div>':check('bf','Trinkt wie gewohnt?')+check('bw','Nasse Windeln unauffällig?')+check('bs','Stuhlgang altersentsprechend?')+check('ba','Wachheit und Erweckbarkeit unauffällig?')+check('bj','Keine zunehmende Gelbfärbung?')+check('bn','Nabel reizlos?')+check('bt','Keine auffällige Temperatur?')+`<div class="status warn"><b>Wichtig:</b> Die Häkchen dokumentieren nur unauffällige Beobachtungen. Eine nicht gesetzte Box wird nicht automatisch als Warnsignal interpretiert. Bei tatsächlich auffälligem Befund medizinisch beurteilen lassen.</div>`+src('NICE Postnatal Care','https://www.nice.org.uk/guidance/ng194/chapter/recommendations')}
 
@@ -850,7 +937,7 @@ function importJSON(e){
       Object.keys(D).forEach(k=>delete D[k]);
       Object.assign(D,imported);
       D.profile={name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen',...(D.profile||{})};
-      D.weights=Array.isArray(D.weights)?D.weights:[];
+      D.weights=Array.isArray(D.weights)?D.weights:[];D.babyLog=Array.isArray(D.babyLog)?D.babyLog:[];D.dataVersion=DATA_VERSION;
       D.hospital={u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false,...(D.hospital||{})};
       D.checks=D.checks&&typeof D.checks==='object'?D.checks:{};
       D.state={scar:false,...(D.state||{})};
@@ -875,7 +962,7 @@ function importJSON(e){
 }
 function resetAll(){
   if(!confirm('Wirklich alle Daten löschen?'))return;
-  const fresh={profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
+  const fresh={dataVersion:DATA_VERSION,profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],babyLog:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
   Object.keys(D).forEach(k=>delete D[k]);Object.assign(D,fresh);
   try{localStorage.removeItem(K);localStorage.removeItem(K+'_jsonBackupSnapshot');}catch(e){}
   location.reload();
@@ -1018,8 +1105,9 @@ if(typeof module!=='undefined' && module.exports) module.exports=AnalgesiaCore;
     if(dataError)return;
     const dose=selectedDose(drug),r=profile(drug);
     if(!Number.isInteger(dose)||dose<=0||dose>20000)return feedback('Bitte eine gültige Dosis in mg eingeben.',true);
+    const painRaw=prompt('Schmerz aktuell 0–10 (optional, leer lassen zum Überspringen):','');if(painRaw===null)return;const pain=painRaw.trim()===''?null:Number(painRaw);if(pain!==null&&(!Number.isFinite(pain)||pain<0||pain>10))return feedback('Schmerzscore bitte zwischen 0 und 10 eingeben.',true);
     const time=Date.now(); // Capture at the click, before any confirmation dialog.
-    const e={id:globalThis.crypto?.randomUUID?.()||String(time)+'-'+Math.random().toString(36).slice(2),drug,route:r.route,dose,time,createdAt:time,updatedAt:time,rule:r};
+    const e={pain,id:globalThis.crypto?.randomUUID?.()||String(time)+'-'+Math.random().toString(36).slice(2),drug,route:r.route,dose,time,createdAt:time,updatedAt:time,rule:r};
     const proposed=[...entries(),e];
     if(!approve(proposed,r))return;
     A.entries=proposed;persist(`${name(drug)} ${mg(dose)} ${way(r.route)} um ${when(time)} erfasst.`);drawHistory();refresh();
@@ -1033,7 +1121,7 @@ if(typeof module!=='undefined' && module.exports) module.exports=AnalgesiaCore;
   function drawHistory(){
     const audits=new Map(C.audit(entries()).map(e=>[e.id,e.warnings]));
     get('an-count').textContent=`(${entries().length})`;
-    get('an-history').innerHTML=dataError?'<div class="an-alert">Analgesiedaten konnten nicht sicher gelesen werden.</div>':!entries().length?'<p class="small">Noch keine Gaben. Bereits erhaltene Klinikgaben mit „Jetzt erhalten“ erfassen und anschließend den Zeitpunkt korrigieren.</p>':[...entries()].sort((a,b)=>b.time-a.time).map(e=>`<div class="an-entry"><b>${name(e.drug)} · ${mg(e.dose)} · ${way(e.route)}</b><div>${when(e.time)}</div><div class="small">${esc(C.profiles[e.rule.key].label)}${e.updatedAt!==e.createdAt?' · korrigiert':''}</div>${audits.has(e.id)?`<div class="an-alert">${esc(audits.get(e.id).join(' · '))}</div>`:''}<div class="actions"><button class="secondary" data-an-edit="${esc(e.id)}">Zeit / Dosis ändern</button><button class="danger" data-an-delete="${esc(e.id)}">Löschen</button></div></div>`).join('');
+    get('an-history').innerHTML=dataError?'<div class="an-alert">Analgesiedaten konnten nicht sicher gelesen werden.</div>':!entries().length?'<p class="small">Noch keine Gaben. Bereits erhaltene Klinikgaben mit „Jetzt erhalten“ erfassen und anschließend den Zeitpunkt korrigieren.</p>':[...entries()].sort((a,b)=>b.time-a.time).map(e=>`<div class="an-entry"><b>${name(e.drug)} · ${mg(e.dose)} · ${way(e.route)}${e.pain!==null&&e.pain!==undefined?' · Schmerz '+e.pain+'/10':''}</b><div>${when(e.time)}</div><div class="small">${esc(C.profiles[e.rule.key].label)}${e.updatedAt!==e.createdAt?' · korrigiert':''}</div>${audits.has(e.id)?`<div class="an-alert">${esc(audits.get(e.id).join(' · '))}</div>`:''}<div class="actions"><button class="secondary" data-an-edit="${esc(e.id)}">Zeit / Dosis ändern</button><button class="danger" data-an-delete="${esc(e.id)}">Löschen</button></div></div>`).join('');
     get('an-history').querySelectorAll('[data-an-edit]').forEach(b=>b.addEventListener('click',()=>edit(b.dataset.anEdit)));
     get('an-history').querySelectorAll('[data-an-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('Diese dokumentierte Gabe löschen?')){A.entries=entries().filter(e=>e.id!==b.dataset.anDelete);persist('Gabe gelöscht.');drawHistory();refresh();}}));
   }
@@ -1120,20 +1208,54 @@ if(typeof module!=='undefined' && module.exports) module.exports=AnalgesiaCore;
   document.addEventListener('focusin',keyboard);document.addEventListener('focusout',()=>setTimeout(keyboard,0));
 })();
 
-</script><!-- analgesia-script-end --><aside id="backupReminder" hidden aria-label="Datensicherung"><p role="status">Ungesicherte Änderungen vorhanden</p><button type="button" onclick="exportJSON()">Jetzt sichern · in Dateien ablegen</button></aside>
+</script><!-- analgesia-script-end --><aside id="backupReminder" hidden aria-label="Datensicherung"><p role="status">Seit dem letzten Backup gibt es Änderungen. Die App-Daten selbst sind bereits lokal gespeichert.</p><div class="backup-actions"><button type="button" onclick="exportJSON()">Backup sichern</button><button type="button" class="secondary" onclick="dismissDailyBackupReminder()">Heute nicht mehr erinnern</button></div></aside>
 <script>
 // Compare the entire exported data object, including future persisted fields.
 // Backup metadata stays separate from medical data and the JSON format.
 let backupSnapshot=null;
+let backupReminderVisibleSession=false;
 const backupKey=K+'_jsonBackupSnapshot';
+const backupReminderDayKey=K+'_backupReminderDay';const backupAtKey=K+'_lastBackupAt';
+function localDayStamp(){
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+}
+function backupOlderThan24h(){try{const t=Number(localStorage.getItem(backupAtKey));return !t||Date.now()-t>=86400000}catch(e){return true}}
+function reminderAlreadyShownToday(){
+  try{return localStorage.getItem(backupReminderDayKey)===localDayStamp()}catch(e){return false}
+}
+function markReminderShownToday(){
+  try{localStorage.setItem(backupReminderDayKey,localDayStamp())}catch(e){}
+}
 function refreshBackup(){
   const dirty=JSON.stringify(D)!==backupSnapshot;
-  document.getElementById('backupReminder').hidden=!dirty;
-  document.body.classList.toggle('backup-pending',dirty);
+  const el=document.getElementById('backupReminder');
+  if(!el)return;
+  if(!dirty){
+    backupReminderVisibleSession=false;
+    el.hidden=true;
+    document.body.classList.remove('backup-pending');
+    return;
+  }
+  if(!backupReminderVisibleSession&&backupOlderThan24h()&&!reminderAlreadyShownToday()){
+    backupReminderVisibleSession=true;
+    markReminderShownToday();
+  }
+  const show=backupReminderVisibleSession;
+  el.hidden=!show;
+  document.body.classList.toggle('backup-pending',show);
+}
+function dismissDailyBackupReminder(){
+  backupReminderVisibleSession=false;
+  markReminderShownToday();
+  const el=document.getElementById('backupReminder');
+  if(el)el.hidden=true;
+  document.body.classList.remove('backup-pending');
 }
 function rememberBackup(snapshot){
   backupSnapshot=snapshot;
-  try{localStorage.setItem(backupKey,snapshot);}catch(e){/* Session tracking still works. */}
+  backupReminderVisibleSession=false;
+  try{localStorage.setItem(backupKey,snapshot);localStorage.setItem(backupAtKey,String(Date.now()));}catch(e){/* Session tracking still works. */}if(typeof renderStorageStatus==='function')renderStorageStatus();
   refreshBackup();
 }
 try{
@@ -1142,8 +1264,10 @@ try{
   if(backupSnapshot===null && localStorage.getItem(K)===null)backupSnapshot=JSON.stringify(D);
 }catch(e){backupSnapshot=JSON.stringify(D);}
 refreshBackup();
-</script><script>
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.error));
 }
-</script></body></html>
+</script>
+</body></html>
