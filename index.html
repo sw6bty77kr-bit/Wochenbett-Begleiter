@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><title>Wochenbett Begleiter</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#fbf7f8"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><title>Wochenbett Begleiter</title><style>
 :root{
   --bg1:#fbf7f8;
   --bg2:#f5f2f7;
@@ -310,19 +310,403 @@ hr{border:0;border-top:1px solid #efe8ec;margin:16px 0}
   border:1px solid #eadfe5;border-radius:16px;padding:12px 13px;
   font-size:13px;line-height:1.45;color:#60565b;margin:4px 2px 12px;
 }
-</style>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Wochenbett">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#fbf7f8">
 
-</head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · PWA 1.0</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="baby">Baby</button><button data-v="mama">Mama</button><button data-v="timeline">Zeitplan</button></div>
-<section id="today" class="view on"><div class="card"><h2>Heute</h2><div id="todaySummary"></div></div><div class="card"><h2>Heute relevant</h2><div id="todayTasks"></div></div></section>
-<section id="baby" class="view"><div class="card"><h2>Gewicht</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
-<section id="mama" class="view"><div class="card"><h2>Mama heute</h2><div id="mamaToday"></div></div><div class="card"><h2>Übungen und Belastung</h2><div id="exercise"></div></div><div class="card"><h2>Sectio Narbe</h2><div id="scar"></div><div class="check"><input id="scarClosed" type="checkbox" onchange="setScar()"><div class="t"><b>Narbe vollständig geschlossen, trocken und ohne Krusten?</b><div class="small">Erst dann werden Massage und Silikon als Optionen freigeschaltet.</div></div></div></div><div class="card"><h2>Wochenbett Check</h2><div id="mamaCheck"></div></div><div class="card"><h2>Ärztliche Termine</h2><div id="mamaFixed"></div></div></section>
-<section id="timeline" class="view"><div class="card"><h2>Zeitplan Baby</h2><div id="tlBaby"></div></div><div class="card"><h2>Zeitplan Mama</h2><div id="tlMama"></div></div></section>
+/* ===== v3.12 visual refresh only ===== */
+:root{
+  --bg1:#fbf7f8;
+  --bg2:#f4f0f5;
+  --card:#ffffff;
+  --text:#2d272b;
+  --muted:#7d7278;
+  --line:#e9e1e5;
+  --rose:#d8899f;
+  --rose-deep:#bd6c84;
+  --lav:#9c8bd4;
+  --lav-soft:#f1edfb;
+  --green:#4e9b73;
+  --green-soft:#edf7f1;
+  --amber:#bf7d31;
+  --amber-soft:#fff5e7;
+  --red:#c45b65;
+  --red-soft:#fff0f2;
+  --blue:#6787c3;
+  --blue-soft:#eef3fc;
+  --shadow:0 10px 28px rgba(88,62,75,.07);
+}
+
+body{
+  background:
+    radial-gradient(circle at 10% 0%, rgba(216,137,159,.11), transparent 30%),
+    radial-gradient(circle at 95% 8%, rgba(156,139,212,.10), transparent 26%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+
+.wrap{
+  max-width:760px;
+  padding-left:14px;
+  padding-right:14px;
+}
+
+h1{
+  font-size:31px;
+  letter-spacing:-.8px;
+  margin-bottom:5px;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.tabs{
+  gap:8px;
+  padding-top:11px;
+  padding-bottom:12px;
+  background:rgba(249,246,248,.86);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+}
+
+.tabs button{
+  min-height:42px;
+  border-radius:999px;
+  padding:10px 15px;
+  background:rgba(255,255,255,.9);
+  border:1px solid var(--line);
+  color:#5f555b;
+  box-shadow:0 3px 10px rgba(80,57,69,.04);
+  font-size:14px;
+}
+
+.tabs button.on{
+  background:linear-gradient(135deg,var(--rose),var(--lav));
+  color:white;
+  border-color:transparent;
+  box-shadow:0 8px 18px rgba(190,108,132,.18);
+}
+
+.card{
+  border-radius:24px;
+  border:1px solid rgba(233,225,229,.9);
+  padding:18px;
+  margin:14px 0;
+  background:rgba(255,255,255,.97);
+  box-shadow:var(--shadow);
+}
+
+.card h2{
+  font-size:18px;
+  letter-spacing:-.25px;
+  margin-bottom:13px;
+}
+
+.metric{
+  border-radius:18px;
+  background:linear-gradient(180deg,#fff,#faf7f9);
+  border:1px solid #efe8ec;
+  padding:14px;
+}
+
+.metric .k{
+  color:var(--muted);
+  font-weight:650;
+}
+
+.metric .v{
+  font-size:22px;
+  font-weight:760;
+}
+
+.metric .s{
+  color:var(--muted);
+}
+
+.status{
+  border-radius:18px;
+  padding:13px 14px;
+  border:1px solid transparent;
+  line-height:1.5;
+}
+
+.status.ok{background:var(--green-soft);color:#316f52;border-color:#dcefe4}
+.status.warn{background:var(--amber-soft);color:#87571f;border-color:#f2e1c7}
+.status.alert{background:var(--red-soft);color:#983d46;border-color:#f0d7db}
+.status.info{background:var(--blue-soft);color:#4f6fa7;border-color:#dbe6f7}
+.status.soft{background:var(--lav-soft);color:#6859ac;border-color:#e4ddf5}
+
+.timeline-item{
+  padding:14px 0;
+  border-bottom:1px solid #f0e9ed;
+}
+
+.timeline-title{
+  font-size:15px;
+  line-height:1.35;
+  font-weight:730;
+}
+
+.timeline-text{
+  line-height:1.55;
+  color:#544b50;
+}
+
+.timeline-date{
+  color:var(--muted);
+}
+
+.sectiontag{
+  border-radius:999px;
+  padding:5px 9px;
+}
+
+.sectiontag.fixed{background:var(--blue-soft);color:#4f6fa7}
+.sectiontag.dynamic{background:var(--lav-soft);color:#6859ac}
+.sectiontag.rec{background:var(--green-soft);color:#316f52}
+.sectiontag.alert{background:var(--red-soft);color:#983d46}
+
+.checkrow{
+  padding:11px 0;
+  gap:11px;
+  border-bottom:1px solid #f1eaee;
+}
+
+.checkrow input{
+  width:23px;
+  height:23px;
+  accent-color:var(--rose-deep);
+}
+
+input,select,textarea{
+  min-height:46px;
+  border-radius:14px;
+  border-color:var(--line);
+  font-size:16px;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:var(--rose);
+  box-shadow:0 0 0 4px rgba(216,137,159,.11);
+}
+
+button.primary,
+.actions button{
+  min-height:46px;
+  border-radius:14px;
+}
+
+button.primary{
+  background:linear-gradient(135deg,var(--rose),var(--rose-deep));
+}
+
+.settings-gear{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:rgba(255,255,255,.94);
+  border:1px solid var(--line);
+  color:#665d62;
+  box-shadow:0 5px 16px rgba(91,65,77,.10);
+}
+
+.todaylist .timeline-item{
+  background:#fffafb;
+  border:1px solid #f0e6eb;
+  border-radius:18px;
+  padding:13px;
+  margin:9px 0;
+}
+
+.todaylist .timeline-item:last-child{
+  border-bottom:1px solid #f0e6eb;
+}
+
+#today .card:first-of-type{
+  background:linear-gradient(145deg,#ffffff,#fff8fa);
+}
+
+.small,.source,.footer{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.source a{
+  color:var(--rose-deep);
+  text-decoration:none;
+}
+
+.section-kicker{
+  font-size:11px;
+  font-weight:760;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#9a858f;
+  margin:3px 3px 8px;
+}
+
+@media(max-width:560px){
+  .grid3{grid-template-columns:1fr 1fr}
+  .grid3 .metric:last-child:nth-child(odd){grid-column:1/-1}
+  .card{padding:16px}
+  .wrap{padding-left:12px;padding-right:12px}
+}
+
+/* analgesia-style-start */
+#analgesia .an-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#analgesia details{border-top:1px solid var(--line);padding:14px 0}
+#analgesia summary{font-weight:700;cursor:pointer;min-height:32px}
+#analgesia .an-check{display:flex;gap:10px;align-items:flex-start;margin:14px 0;line-height:1.5;color:var(--text)}
+#analgesia .an-check input{width:22px;min-width:22px;height:22px;min-height:22px;margin:2px 0;accent-color:var(--rose-deep)}
+#analgesia .an-med{background:linear-gradient(145deg,#fff8fa,#f6f3fc);border:1px solid var(--line);border-radius:20px;padding:16px;margin:16px 0}
+#analgesia h3{margin:0 0 12px;font-size:20px}
+#analgesia label{display:block;margin:9px 0 5px}
+#analgesia .an-check{display:flex}
+#analgesia progress{width:100%;height:8px;accent-color:var(--rose-deep)}
+#analgesia .an-total{font-size:21px;font-weight:750;margin-top:14px}
+#analgesia .an-next{font-size:18px;font-weight:700;margin:8px 0}
+#analgesia .an-table{overflow-x:auto}
+#analgesia button{min-height:44px}
+#analgesia .an-entry{padding:14px 0;border-bottom:1px solid var(--line)}
+#analgesia .an-entry b{display:block;line-height:1.5}
+#analgesia dialog{border:1px solid var(--line);border-radius:22px;padding:24px;width:calc(100% - 30px);max-width:480px;color:var(--text);max-height:90vh;overflow:auto}
+#analgesia dialog::backdrop{background:rgba(45,39,43,.35)}
+#analgesia .an-alert{background:var(--red-soft);color:#983d46;border-radius:12px;padding:10px;margin:8px 0;line-height:1.5}
+#analgesia .an-note{background:var(--amber-soft);color:#87571f;border-radius:12px;padding:10px;margin:8px 0;line-height:1.5}
+/* analgesia-style-end */
+/* More space between distinct thoughts, compact medication controls. */
+.card h2{margin:0 0 18px;line-height:1.4}
+.card h3{line-height:1.4}
+.card p{line-height:1.65;margin:12px 0}
+.item{padding:18px 0;margin:0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .title{margin:7px 0;line-height:1.45}
+.item .text{line-height:1.7;white-space:pre-line}
+.item .date{margin-bottom:8px;line-height:1.5}
+.status{line-height:1.7;margin-top:14px;margin-bottom:14px}
+.status br{display:block;content:'';margin-top:8px}
+.source{margin-top:12px;line-height:1.7}
+.check{padding:14px 0;gap:12px;line-height:1.6}
+.check:has(input:checked) .t{color:#8b8589;text-decoration:line-through}
+.task-row{display:flex;align-items:flex-start;gap:13px}
+.task-row>.task-toggle{width:23px;height:23px;min-height:23px;min-width:23px;flex:0 0 23px;margin:9px 0 0;accent-color:var(--rose-deep);cursor:pointer}
+.task-body{flex:1;min-width:0}
+.task-row.task-done .task-body{color:#8b8589}
+.task-row.task-done .title,.task-row.task-done .text,.task-row.task-done .date{color:#8b8589;text-decoration:line-through}
+.task-row.task-done .pill{background:#f0edef;color:#8b8589}
+#analgesia .an-heading .pill{display:none}
+#analgesia .an-med{margin:14px 0;padding:16px}
+#analgesia .an-med h3{margin-bottom:10px}
+#analgesia .an-med .an-total{font-size:20px;margin-top:14px}
+#analgesia .an-next{line-height:1.6;font-size:17px;margin:12px 0}
+#analgesia .an-entry{padding:16px 0;line-height:1.6}
+#analgesia .an-heading+p{margin-bottom:16px}
+#analgesia .an-table td{padding:12px 8px;line-height:1.6}
+/* iPhone layout: same data and calculation logic, adaptive controls only. */
+html{-webkit-text-size-adjust:100%;scroll-padding-top:20px}
+button,input,select,textarea,summary{touch-action:manipulation}
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--lav);outline-offset:3px}
+.tabs .nav-parent{display:inline}
+.tabs .nav-parent::after{content:' '}
+@media(max-width:600px){
+  .wrap{width:100%;padding:calc(16px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(108px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+  h1{font-size:29px;padding-right:52px;line-height:1.2}
+  #headsub{max-width:calc(100% - 48px);font-size:13px;line-height:1.6;margin-bottom:20px}
+  .settings-gear{width:46px;height:46px;min-height:46px;top:calc(14px + env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right))}
+  .tabs{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:0;padding:9px max(8px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));border-top:1px solid var(--line);background:rgba(251,248,250,.97);box-shadow:0 -4px 24px rgba(70,45,60,.07);overflow:visible}
+  .tabs button{min-width:0;min-height:54px;padding:8px 2px;border-radius:13px;font-size:12px;line-height:1.35;white-space:normal;box-shadow:none;overflow-wrap:normal}
+  .tabs .nav-parent{display:block;font-size:11px}
+  .tabs .nav-parent::after{content:''}
+  .tabs button.on{box-shadow:0 3px 10px rgba(190,108,132,.15)}
+  .card{padding:16px;margin:12px 0;border-radius:20px;min-width:0}
+  .card h2{font-size:19px;line-height:1.4;margin-bottom:16px}
+  .grid,.two{grid-template-columns:minmax(0,1fr)}
+  .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3 .metric:last-child:nth-child(odd){grid-column:1/-1}
+  .metric{min-width:0;padding:12px}
+  .metric .v{font-size:21px;overflow-wrap:anywhere}
+  input:not([type=checkbox]),select,textarea{width:100%;min-width:0;max-width:100%;min-height:48px;font-size:16px;padding:12px;border-radius:13px}
+  input[type=date],input[type=time],input[type=datetime-local]{display:block;-webkit-appearance:none;appearance:none}
+  button{min-height:48px}
+  .actions{gap:10px}
+  .actions button{flex:1 1 135px;min-width:0;min-height:48px;padding:12px;font-size:15px;line-height:1.4}
+  .item .title{font-size:16px}
+  .item .text,.check .t{font-size:15px;line-height:1.65}
+  .task-row,.check{cursor:pointer;min-height:48px}
+  .task-toggle,.check input[type=checkbox]{flex-shrink:0}
+  .source a{overflow-wrap:anywhere}
+  #history{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #history table{font-size:13px}
+  #history th,#history td{padding:12px 7px;white-space:nowrap}
+  #history button{min-width:44px;min-height:44px}
+  #analgesia .an-heading .section-kicker{display:none}
+  #analgesia .an-med{padding:14px;border-radius:17px}
+  #analgesia .an-med h3{font-size:21px}
+  #analgesia .an-med .actions button{width:100%;min-height:52px;font-size:17px}
+  #analgesia .an-next{font-size:17px;line-height:1.6;overflow-wrap:anywhere}
+  #analgesia summary{min-height:48px;padding:10px 0;line-height:1.6}
+  #analgesia details{padding:6px 0}
+  #analgesia .an-entry .actions button{flex-basis:100px}
+  #analgesia dialog{width:calc(100% - 20px);max-height:calc(100dvh - 30px);padding:20px 16px;border-radius:20px}
+  .settings-overlay{padding:0;align-items:flex-end}
+  .settings-sheet{width:100%;max-height:94vh;max-height:94dvh;border-radius:24px 24px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .settings-close{min-width:44px;width:44px;height:44px;min-height:44px}
+  body.iphone-keyboard .tabs{display:none}
+}
+@media(max-width:350px){
+  .tabs button{font-size:11px}
+  .card{padding:13px}
+  .grid3{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+/* Backup reminder: reserve space above the iPhone navigation. */
+#backupReminder[hidden]{display:none!important}
+#backupReminder{position:fixed;z-index:1100;left:12px;right:12px;bottom:16px;max-width:732px;margin:auto;padding:12px 16px;border:2px solid #b95f7a;border-radius:18px;background:#fff5e8;box-shadow:0 6px 28px rgba(43,37,41,.22)}
+#backupReminder p{margin:0 0 8px;font-size:14px;font-weight:700;color:#713b50}
+#backupReminder button{width:100%;min-height:48px;background:#a84b68;color:#fff}
+body.backup-pending .wrap{padding-bottom:calc(220px + env(safe-area-inset-bottom))}
+body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-inset-bottom))}
+@media(max-width:600px){#backupReminder{bottom:calc(80px + env(safe-area-inset-bottom))}body.iphone-keyboard #backupReminder{bottom:8px}}
+</style></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v3.21</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
+<section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
+<section id="baby" class="view"><div class="section-kicker">Baby</div><div class="card"><h2>Gewicht</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
+<section id="mamaAnalgesia" class="view"><div class="section-kicker">Mama: Analgesie</div><!-- analgesia-module-start -->
+<div class="card" id="analgesia">
+  <div class="an-heading"><div><div class="section-kicker">Nach Sectio</div><h2>Schmerz &amp; Analgesie</h2></div><span class="pill dyn">Testansicht</span></div>
+  <p class="small">Ein Klick speichert die aktuelle Uhrzeit. Zeit und Dosis lassen sich im Verlauf ändern. Die Berechnung berücksichtigt die dokumentierten Gaben, einschließlich p.o. und i.v.</p>
+  <details id="an-settings" open><summary>Einstellungen · 70 kg</summary>
+    <p class="small">Mit etwa 70 kg gelten die hinterlegten Erwachsenenwerte; das Gewicht erhöht die Höchstdosen nicht. Diese Standardwerte setzen voraus, dass keine relevanten Gegenanzeigen oder individuellen Dosisanpassungen bestehen. Bei Leber-/Nierenproblemen, Dehydratation, Mangelernährung oder anderen Risiken das individuelle Schema mit dem Behandlungsteam klären. Das Standardprofil bestätigt keine ärztliche Verordnung.</p>
+  </details>
+  <div id="an-feedback" role="status" aria-live="polite"></div>
+  <div id="an-cards"></div>
+  <details><summary>Dokumentierte Gaben <span id="an-count"></span></summary><div id="an-history"></div></details>
+  <details><summary>Grenzwerte und Quellen</summary>
+    <div class="an-table"><table><thead><tr><th>Präparat / Weg</th><th>Abstand</th><th>Maximum / 24 h</th></tr></thead><tbody>
+    <tr><td>Ibuprofen p.o., 200/400 mg</td><td>≥ 6 h</td><td>1.200 mg</td></tr>
+    <tr><td>Ibuprofen p.o., 400 mg · gestaffelte Prüfung</td><td>≥ 4 h · persönliches Schema</td><td>Warnung &gt; 1.200 mg; Grenze 2.400 mg</td></tr>
+    <tr><td>Ibuflam 600 mg p.o., verordnet</td><td>≥ 6 h · persönliches Schema</td><td>2.400 mg</td></tr>
+    <tr><td>Ibuprofen B. Braun 600 mg i.v.</td><td>6–8 h; Prüfung ab 6 h</td><td>1.200 mg</td></tr>
+    <tr><td>Paracetamol-ratiopharm p.o.</td><td>≥ 6 h</td><td>4.000 mg*</td></tr>
+    <tr><td>Paracetamol B. Braun i.v.</td><td>≥ 4 h; höchstens 4 Gaben / 24 h</td><td>4.000 mg*</td></tr>
+    </tbody></table></div>
+    <p class="small">*Hier nur für Erwachsene &gt; 50 kg ohne Risikofaktoren. Die Fachinformationen enthalten niedrigere Grenzen bzw. längere Abstände für besondere Patientengruppen. Die Höchstdosis ist kein Einnahmeziel. I.v.-Gaben werden ausschließlich durch Fachpersonal verabreicht; der Zeitstempel bezeichnet den Infusionsbeginn, die Dosis die tatsächlich verabreichte Wirkstoffmenge in mg.</p>
+    <p class="small">Persönliches orales Schema: 400 mg frühestens alle 4 Stunden; 600 mg frühestens alle 6 Stunden. Beide entsprechen bei regelmäßiger Gabe höchstens 2.400 mg in 24 Stunden. Diese Abstände sind eure hinterlegte Vorgabe, keine allgemeine Fachinformationsvorgabe. Eine höhere Tagesgrenze verkürzt den Mindestabstand nicht. Für den rezeptfreien 1.200-mg-Modus bleibt der Abstand von 6 Stunden bestehen.</p>
+    <p class="small"><b>Regeln dieser Testansicht:</b> Bei einem Wechsel gilt konservativ der längere Abstand der beiden benachbarten Gaben. Bei rein oralem Ibuprofen gilt die aktuell gewählte Grenze für die gesamte Wirkstoffmenge. Mit einer i.v.-Ibuprofen-Gabe im 24-h-Fenster bleibt die gemeinsame Prüfgrenze konservativ bei 1.200 mg. Bei Paracetamol mit i.v.-Anteil zählen höchstens vier Gaben insgesamt. Dies sind konservative App-Regeln für den Wechsel, keine zusätzliche Fachinformationsvorgabe.</p>
+    <p class="small">„Frühestens laut hinterlegtem Schema“ berücksichtigt Einzeldosis, Abstand, gleitende Summe und gegebenenfalls Anzahl der Gaben. Es ist keine individuelle medizinische Freigabe. Bereits verabreichte Gaben können trotz Warnung dokumentiert werden. Bei vermuteter Überdosierung sofort medizinischen Rat einholen, bei Paracetamol auch ohne Beschwerden.</p>
+    <ul class="source">
+      <li><a target="_blank" rel="noopener" href="https://www.fachinfo.de/fi/pdf/004505">IBU-ratiopharm 200 mg akut · Fachinformation</a></li>
+      <li><a target="_blank" rel="noopener" href="https://www.fachinfo.de/fi/pdf/024362">Ibuprofen AbZ 400 mg · Fachinformation zum höheren oralen Dosisbereich</a></li>
+      <li><a target="_blank" rel="noopener" href="https://www.zentiva.de/-/media/products/de/i/ibuflam-lichtenstein/600mg/_DE_FI_Ibuflam_600mg_Lichtenstein.pdf">Ibuflam 600 mg Lichtenstein · Fachinformation</a></li>
+      <li><a target="_blank" rel="noopener" href="https://www.fachinfo.de/fi/pdf/022211">Ibuprofen B. Braun 600 mg i.v. · Fachinformation</a></li>
+      <li><a target="_blank" rel="noopener" href="https://www.ratiopharm.de/assets/products/de/label/Paracetamol-ratiopharm%20500%20mg%20Tabletten%20-%208.pdf?pzn=1126111">Paracetamol-ratiopharm 500 mg · Fachinformation</a></li>
+      <li><a target="_blank" rel="noopener" href="https://www.fachinfo.de/fi/pdf/013966">Paracetamol B. Braun i.v. · Fachinformation</a></li>
+    </ul><p class="small">Quellen geprüft am 06.09.2026. Speicherung lokal im bestehenden App-Backup; CSV bleibt der Gewichtsexport.</p>
+  </details>
+  <dialog id="an-editor"><form id="an-edit-form"><h2>Gabe bearbeiten</h2><p id="an-edit-title"></p><label for="an-edit-time">Tatsächlicher Zeitpunkt (Ortszeit)</label><input type="datetime-local" step="1" id="an-edit-time" required><label for="an-edit-dose">Verabreichte Wirkstoffmenge in mg</label><input type="number" min="1" max="20000" step="1" id="an-edit-dose" required><p class="small">Bei i.v.: Infusionsbeginn. Bei einer falschen Wirkstoff- oder Wegauswahl den Eintrag löschen und korrekt neu erfassen.</p><div class="actions"><button type="submit" class="primary">Änderung speichern</button><button type="button" class="secondary" id="an-edit-cancel">Abbrechen</button></div></form></dialog>
+</div>
+<!-- analgesia-module-end -->
+</section><section id="mama" class="view"><div class="section-kicker">Mama: heute</div><div class="card"><h2>Mama heute</h2><div id="mamaToday"></div></div><div class="card"><h2>Übungen und Belastung</h2><div id="exercise"></div></div><div class="card"><h2>Sectio Narbe</h2><div id="scar"></div><div class="check"><input id="scarClosed" type="checkbox" onchange="setScar()"><div class="t"><b>Narbe vollständig geschlossen, trocken und ohne Krusten?</b><div class="small">Erst dann werden Massage und Silikon als Optionen freigeschaltet.</div></div></div></div><div class="card"><h2>Wochenbett Check</h2><div id="mamaCheck"></div></div><div class="card"><h2>Ärztliche Termine</h2><div id="mamaFixed"></div></div></section>
+<section id="timeline" class="view"><div class="section-kicker">Zeitplan</div><div class="card"><h2>Zeitplan Baby</h2><div id="tlBaby"></div></div><div class="card"><h2>Zeitplan Mama</h2><div id="tlMama"></div></div></section>
 
 
 <div id="settingsOverlay" class="settings-overlay" aria-hidden="true">
@@ -337,14 +721,14 @@ hr{border:0;border-top:1px solid #efe8ec;margin:16px 0}
     <div id="firstStartNote" class="firststart-note" style="display:none">
       Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
     </div>
-    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small">Alle Daten bleiben lokal im Browser.</p></div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>iPhone-Hinweis:</b> Wird diese HTML-Datei direkt aus „Dateien“ in Safari geöffnet, ist der Browserspeicher nicht zuverlässig dauerhaft. Für eine sichere Aufbewahrung nach Änderungen „Backup exportieren“ wählen und im Teilen-Menü <b>In Dateien sichern</b>. Ein Backup wird ohne Neuladen wieder eingelesen.</p></div>
   </div>
 </div>
 <p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
 <script>
 const K='wochenbett_v3';let D={profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
 try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{}}}catch(e){}
-const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('de-DE'),add=(s,n)=>{let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},day=s=>D.profile.dob?Math.round((new Date(s+'T12:00:00')-new Date(D.profile.dob+'T12:00:00'))/86400000):null,pct=w=>((w-+D.profile.bw)/+D.profile.bw*100),pctp=v=>(v>0?'+':'')+v.toFixed(1)+' %',save=()=>{try{localStorage.setItem(K,JSON.stringify(D));return localStorage.getItem(K)!==null}catch(e){console.error(e);return false}},src=(t,u)=>`<div class="source">Quelle: <a href="${u}" target="_blank">${t}</a></div>`;
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('de-DE'),add=(s,n)=>{let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},day=s=>D.profile.dob?Math.round((new Date(s+'T12:00:00')-new Date(D.profile.dob+'T12:00:00'))/86400000):null,pct=w=>((w-+D.profile.bw)/+D.profile.bw*100),pctp=v=>(v>0?'+':'')+v.toFixed(1)+' %',save=()=>{if(typeof refreshBackup==='function')refreshBackup();try{localStorage.setItem(K,JSON.stringify(D));return localStorage.getItem(K)!==null}catch(e){console.error(e);return false}},src=(t,u)=>`<div class="source">Quelle: <a href="${u}" target="_blank">${t}</a></div>`;
 
 function hasProfile(){return !!(D.profile&&D.profile.dob&&D.profile.bw)}
 function openSettings(firstStart=false){
@@ -427,19 +811,339 @@ function renderHospital(){$('hospital').innerHTML=[['u1','U1'],['pulse','Pulsoxy
 function renderMama(){let d=day(today());if(d===null){['mamaToday','exercise','scar','mamaCheck','mamaFixed'].forEach(id=>$(id).innerHTML='<div class="empty">Geburtsdatum fehlt.</div>');return}$('mamaToday').innerHTML=`<div class="grid3"><div class="metric"><div class="k">Postoperativer Tag</div><div class="v">${d}</div></div><div class="metric"><div class="k">Narbe</div><div class="v" style="font-size:17px">${D.state.scar?'verheilt markiert':'nicht freigegeben'}</div></div><div class="metric"><div class="k">Belastung</div><div class="v" style="font-size:17px">${d<14?'sanft':d<42?'graduell':'progressiv'}</div></div></div>`;document.getElementById('exercise').innerHTML=exerciseItems(d).map(x=>`<div class="item"><span class="pill ${x[0]}">${x[0]==='dyn'?'Pragmatisch':'Empfehlung'}</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')+src('ACOG Postpartum Exercise','https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2020/04/physical-activity-and-exercise-during-pregnancy-and-the-postpartum-period');$('scar').innerHTML=`<div class="item"><span class="pill rec">Empfehlung</span><div class="title">Wunde täglich ansehen</div><div class="text">Sanft reinigen, trocken halten und auf zunehmende Rötung, Sekretion, Schmerzen oder Dehiszenz achten.</div></div>${D.state.scar?'<div class="status ok"><b>Massage/Silikon freigeschaltet.</b> Sanfte Narbenmobilisation vorsichtig möglich. Silikongel oder Silikonauflage nur auf vollständig intakter Haut; präventiver Nutzen ist möglich, aber nicht sicher belegt.</div>':'<div class="status info"><b>Massage und Silikon noch nicht freigeschaltet.</b> Entscheidend ist der Wundstatus, nicht ein fixes Datum.</div>'}${src('NICE Caesarean Birth','https://www.nice.org.uk/guidance/ng192/chapter/recommendations')}${src('CUH Silicone for scars','https://www.cuh.nhs.uk/patient-information/silicone-for-scars/')}`;$('mamaCheck').innerHTML=d<=13||d%7===0?check('mb','Blutung/Wochenfluss unauffällig?')+check('mw','Wunde unauffällig?')+check('mt','Keine Fieberzeichen?')+check('ml','Keine einseitige Beinschwellung oder Wadenschmerzen?')+check('mr','Keine Atemnot oder Thoraxschmerzen?')+check('mh','Keine starken ungewöhnlichen Kopfschmerzen/Sehstörungen?')+check('mu','Wasserlassen unauffällig?')+check('mc','Keine deutlichen Brustentzündungszeichen?')+check('mm','Psychisches Befinden insgesamt tragbar?')+`<div class="status warn"><b>Wichtig:</b> Bei starker Blutung, Atemnot/Thoraxschmerz, einseitiger Beinschwellung, Fieber mit Krankheitsgefühl oder neurologischen Warnzeichen nicht auf den nächsten App-Termin warten.</div>`+src('NICE Postnatal Care','https://www.nice.org.uk/guidance/ng194/chapter/recommendations'):'<div class="status info">Heute kein geplanter Routinecheck. Bei Beschwerden jederzeit unabhängig vom Kalender reagieren.</div>';document.getElementById('mamaFixed').innerHTML=mamaFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+src('G-BA Mutterschafts-Richtlinie','https://www.g-ba.de/richtlinien/19/')}
 function setScar(){D.state.scar=$('scarClosed').checked;save();render()}
 function renderTimeline(){if(!D.profile.dob){$('tlBaby').innerHTML=$('tlMama').innerHTML='<div class="empty">Geburtsdatum fehlt.</div>';return}let p=planner();$('tlBaby').innerHTML=babyFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+(p?`<div class="item"><div class="date">${fmt(p.next)}</div><span class="pill dyn">Dynamisch</span><div class="title">Nächste Gewichtskontrolle</div><div class="text">${p.a}</div></div>`:'');let d=D.profile.dob;$('tlMama').innerHTML=mamaFixedItems().map(x=>`<div class="item"><div class="date">${x.range}</div><span class="pill fixed">Fixtermin</span><div class="title">${x.title}</div><div class="text">${x.txt}</div></div>`).join('')+[[0,'Mobilisation beginnen','Frühmobilisation, Atmung, Fußpumpe und sehr sanfte Beckenbodenwahrnehmung.'],[7,'Sanfte Rückbildungsübungen','Beckenkippung, tiefe Bauchaktivierung und Spaziergänge graduell steigern.'],[14,'Funktionelle Progression','Cat Cow, kleine Bridge und leichte Kniebeugen bei unkompliziertem Verlauf vorsichtig testen.'],[28,'Low Impact ausbauen','Ergometer und leichte Widerstandsübungen bei Beschwerdefreiheit möglich.'],[42,'Belastung neu bewerten','Nach gynäkologischer Kontrolle und bei unauffälligem Verlauf Trainingsumfang weiter steigern.']].map(x=>`<div class="item"><div class="date">${fmt(add(d,x[0]))}</div><span class="pill dyn">Dynamisch</span><div class="title">${x[1]}</div><div class="text">${x[2]}</div></div>`).join('')}
-function exportJSON(){let b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='wochenbett-backup.json';a.click()}
-function exportCSV(){let rows=[['Datum','Lebenstag','Gewicht_g','Abweichung_%','Notiz'],...D.weights.map(x=>[x.date,day(x.date)+1,x.w,pct(x.w).toFixed(2),x.n||''])],csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(';')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='babygewicht.csv';a.click()}
-function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{try{D=JSON.parse(r.result);save();location.reload()}catch(e){alert('Backup konnte nicht gelesen werden.')}};r.readAsText(f)}function resetAll(){if(confirm('Wirklich alle Daten löschen?')){localStorage.removeItem(K);location.reload()}}
-$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=today();$('scarClosed').checked=!!D.state.scar;render();if(!hasProfile())setTimeout(()=>openSettings(true),80);
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => {
-      console.error('Service Worker Registrierung fehlgeschlagen:', err);
-    });
-  });
+function backupFilename(){
+  const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+  return `wochenbett-backup_${stamp}.json`;
 }
-</script>
+async function exportJSON(){
+  const snapshot=JSON.stringify(D);
+  const pretty=JSON.stringify(D,null,2);
+  const file=new File([pretty],backupFilename(),{type:'application/json'});
+  try{
+    // On iPhone/iPad Safari the native share sheet is the most reliable way
+    // to place a local-file backup in the Files app.
+    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+      await navigator.share({files:[file],title:'Wochenbett Backup'});
+      rememberBackup(snapshot);
+      return;
+    }
+    const b=new Blob([pretty],{type:'application/json'}),url=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    // Fallback browsers expose only that the download was initiated.
+    rememberBackup(snapshot);
+  }catch(e){
+    if(e && e.name==='AbortError')return;
+    console.error(e);
+    alert('Backup konnte nicht gespeichert werden. Bitte erneut versuchen und im iPhone-Teilen-Menü „In Dateien sichern“ wählen.');
+  }
+}
+function exportCSV(){let rows=[['Datum','Lebenstag','Gewicht_g','Abweichung_%','Notiz'],...D.weights.map(x=>[x.date,day(x.date)+1,x.w,pct(x.w).toFixed(2),x.n||''])],csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(';')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='babygewicht.csv';a.click()}
+function importJSON(e){
+  const input=e.target,f=input.files&&input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const imported=JSON.parse(r.result);
+      if(!imported || typeof imported!=='object' || Array.isArray(imported))throw new Error('Ungültiges Backupformat');
+      const oldAnalgesia=D.analgesia;
+      Object.keys(D).forEach(k=>delete D[k]);
+      Object.assign(D,imported);
+      D.profile={name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen',...(D.profile||{})};
+      D.weights=Array.isArray(D.weights)?D.weights:[];
+      D.hospital={u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false,...(D.hospital||{})};
+      D.checks=D.checks&&typeof D.checks==='object'?D.checks:{};
+      D.state={scar:false,...(D.state||{})};
+      // The analgesia module keeps a live reference. Update that object in place
+      // so an import works without a page reload, even when Safari discards localStorage.
+      if(oldAnalgesia){
+        const incoming=D.analgesia&&typeof D.analgesia==='object'?D.analgesia:{version:1,config:{},entries:[]};
+        Object.keys(oldAnalgesia).forEach(k=>delete oldAnalgesia[k]);
+        Object.assign(oldAnalgesia,incoming);
+        D.analgesia=oldAnalgesia;
+      }
+      save();
+      try{render()}catch(err){console.error('Renderfehler nach Backup-Import:',err)}
+      if(typeof window.refreshAnalgesiaUI==='function')window.refreshAnalgesiaUI();
+      rememberBackup(JSON.stringify(D));
+      closeSettings(true);activateTab('today');
+      alert('Backup erfolgreich eingelesen. Die Daten sind jetzt in der App geladen.');
+    }catch(err){console.error(err);alert('Backup konnte nicht gelesen werden oder enthält keine gültigen App-Daten.');}
+    finally{input.value='';}
+  };
+  r.readAsText(f);
+}
+function resetAll(){
+  if(!confirm('Wirklich alle Daten löschen?'))return;
+  const fresh={profile:{name:'',dob:'',bw:'',btime:'',discharge:'',feeding:'stillen'},weights:[],hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
+  Object.keys(D).forEach(k=>delete D[k]);Object.assign(D,fresh);
+  try{localStorage.removeItem(K);localStorage.removeItem(K+'_jsonBackupSnapshot');}catch(e){}
+  location.reload();
+}
+$('name').value=D.profile.name||'';$('dob').value=D.profile.dob||'';$('bw').value=D.profile.bw||'';$('btime').value=D.profile.btime||'';$('discharge').value=D.profile.discharge||'';$('feeding').value=D.profile.feeding||'stillen';$('mdate').value=today();$('scarClosed').checked=!!D.state.scar;render();if(!hasProfile())setTimeout(()=>openSettings(true),80);
+</script><!-- analgesia-script-start --><script>
+/* Analgesie: all times are epoch milliseconds, all doses are mg of active ingredient. */
+const AnalgesiaCore = (() => {
+  const H = 3600000, DAY = 24 * H;
+  const profiles = {
+    ibuOTC: {drug:'ibu', route:'po', label:'Oral · bis 1.200 mg/24 h', interval:6, max:1200, single:400, dose:400},
+    ibu400Rx: {drug:'ibu', route:'po', label:'Oral · 400 mg · mindestens 4 h', interval:4, max:2400, single:400, dose:400},
+    ibuRx: {drug:'ibu', route:'po', label:'Oral · 600 mg · mindestens 6 h', interval:6, max:2400, single:600, dose:600},
+    ibuIV: {drug:'ibu', route:'iv', label:'Intravenös · 600 mg', interval:6, max:1200, single:600, dose:600},
+    paraPO: {drug:'para', route:'po', label:'Oral', interval:6, max:4000, single:1000, dose:1000},
+    paraIV: {drug:'para', route:'iv', label:'Intravenös', interval:4, max:4000, single:1000, dose:1000}
+  };
+  const windowAt = (entries, drug, t) => entries.filter(e => e.drug === drug && e.time > t-DAY && e.time <= t);
+  const sum = es => es.reduce((a,e) => a+e.dose,0);
+  function rule(key, config) {
+    const p = profiles[key];
+    return {...p, key, interval:p.interval || Number(config.rxInterval) || null};
+  }
+  // A route/plan change must not reset the active ingredient's budget or interval.
+  // The smaller limit in a mixed 24-h window and the longer adjacent interval
+  // are conservative app rules, not a quoted product switching protocol.
+  function cap(entries, r, t) {
+    if(r.drug==='ibu') return r.route==='iv'||windowAt(entries,'ibu',t).some(e=>e.route==='iv')?Math.min(r.max,1200):r.max;
+    return Math.min(r.max, ...windowAt(entries,r.drug,t).map(e => e.rule.max));
+  }
+  function issues(entries, e) {
+    const before = entries.filter(x => x.drug===e.drug && x.time<=e.time).sort((a,b)=>a.time-b.time);
+    const last = before.at(-1), active = windowAt(entries,e.drug,e.time), out=[];
+    if(e.dose>e.rule.single) out.push('Einzeldosis über der hinterlegten Präparategrenze');
+    if(last) {
+      const interval = last.rule.key===e.rule.key ? e.rule.interval : Math.max(last.rule.interval || 0,e.rule.interval || 0);
+      if(e.time-last.time<interval*H) out.push('Mindestabstand zum gleichen Wirkstoff unterschritten');
+    }
+    if(sum(active)+e.dose>cap(entries,e.rule,e.time)) out.push('Gemeinsame 24-h-Höchstdosis überschritten');
+    else if(e.drug==='ibu' && sum(active)+e.dose>1200) out.push('Warnschwelle von 1.200 mg Ibuprofen / 24 h überschritten; höherer oraler Dosisbereich nur nach ärztlicher Anordnung');
+    if(e.drug==='para' && (e.route==='iv'||active.some(x=>x.route==='iv')) && active.length>=4)
+      out.push('Mehr als vier Paracetamol-Gaben im 24-h-Fenster mit i.v.-Gabe');
+    return out;
+  }
+  function audit(entries) {
+    const ordered=[...entries].sort((a,b)=>a.time-b.time), previous=[], result=[];
+    for(const e of ordered) {const warnings=issues(previous,e); if(warnings.length) result.push({id:e.id,time:e.time,warnings});previous.push(e);}
+    return result;
+  }
+  function next(entries,r,dose,now) {
+    if(!r.interval || !Number.isFinite(dose) || dose<=0 || dose>r.single || dose>r.max) return null;
+    const past=entries.filter(e=>e.drug===r.drug&&e.time<=now).sort((a,b)=>a.time-b.time), last=past.at(-1);
+    if(last && !last.rule.interval) return null;
+    const start=Math.max(now,last ? last.time+(last.rule.key===r.key?r.interval:Math.max(last.rule.interval,r.interval))*H:now);
+    const candidates=[start,...past.map(e=>e.time+DAY).filter(t=>t>start)].sort((a,b)=>a-b);
+    for(const t of candidates) {
+      const active=windowAt(past,r.drug,t), max=cap(past,r,t);
+      const countOK=r.drug!=='para'|| !(r.route==='iv'||active.some(e=>e.route==='iv')) || active.length<4;
+      if(sum(active)+dose<=max&&countOK) return t;
+    }
+    return null;
+  }
+  return {H,DAY,profiles,windowAt,sum,rule,cap,issues,audit,next};
+})();
+if(typeof module!=='undefined' && module.exports) module.exports=AnalgesiaCore;
 
-</body></html>
+(() => {
+  const C=AnalgesiaCore, get=id=>document.getElementById(id);
+  const defaults={eligible:true,weightKg:70,complete:false,rxInterval:'',selected:{ibu:'ibuOTC',para:'paraPO'},doses:{ibu:400,para:1000}};
+  let dataError=false, editId=null;
+  if(!D.analgesia) D.analgesia={version:1,config:defaults,entries:[]};
+  const A=D.analgesia;
+  // User requested the oral 400 mg profile with a 1200 mg warning / 2400 mg ceiling.
+  if(!A.config?.tieredIbuApplied) A.config={...A.config,tieredIbuApplied:true,selected:{...A.config?.selected,ibu:'ibu400Rx'},doses:{...A.config?.doses,ibu:400}};
+  // Apply the user's 70 kg standard profile once; preserve entries and chosen doses.
+  if(!A.config?.standard70Applied) A.config={...A.config,eligible:true,weightKg:70,standard70Applied:true};
+  A.config={...defaults,...A.config,selected:{...defaults.selected,...A.config?.selected},doses:{...defaults.doses,...A.config?.doses}};
+  if(!Array.isArray(A.entries)) {dataError=true;}
+  else dataError=A.entries.some(e=>!e || !['ibu','para'].includes(e.drug)||!['po','iv'].includes(e.route)||!Number.isFinite(e.time)||!Number.isFinite(e.dose)||e.dose<=0||!e.rule||!C.profiles[e.rule.key]||!Number.isFinite(e.rule.max)||e.rule.max<=0||!Number.isFinite(e.rule.single)||e.rule.single<=0||!(e.rule.interval===null||(Number.isFinite(e.rule.interval)&&e.rule.interval>0)));
+  const entries=()=>dataError?[]:A.entries;
+  const name=drug=>drug==='ibu'?'Ibuprofen':'Paracetamol';
+  const way=route=>route==='iv'?'i.v.':'p.o.';
+  const mg=n=>Number(n).toLocaleString('de-DE')+' mg';
+  const when=t=>new Date(t).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function feedback(s,error=false){get('an-feedback').className=error?'an-alert':'status info';get('an-feedback').textContent=s;}
+  function persist(message){
+    const ok=save();
+    feedback(message+(ok?' Lokal gespeichert.':' Nur für diese Sitzung gespeichert – Browserspeicher nicht verfügbar. Bitte App-Backup exportieren.'),!ok);
+  }
+  function profile(drug){
+    let key=A.config.selected[drug];
+    if(!C.profiles[key]||C.profiles[key].drug!==drug) key=drug==='ibu'?'ibuOTC':'paraPO';
+    return C.rule(key,A.config);
+  }
+  function selectedDose(drug){return Number(get('an-dose-'+drug).value);}
+  function blocked(r){
+    if(dataError) return 'Gespeicherte Analgesiedaten sind ungültig. Berechnung und neue Einträge gesperrt; Backup zur Prüfung exportieren.';
+    if(!r.interval) return 'Verordneten Abstand für Ibuprofen 600 mg in den Einstellungen ergänzen.';
+    if(entries().some(e=>e.time>Date.now())) return 'Ein gespeicherter Zeitpunkt liegt in der Zukunft. Bitte im Verlauf korrigieren.';
+    if(C.windowAt(entries(),r.drug,Date.now()).some(e=>!e.rule.interval)) return 'Im 24-h-Verlauf fehlt ein verordneter Abstand. Bitte den betroffenen Eintrag nach Einrichten des Schemas erneut erfassen.';
+    return '';
+  }
+  function drawCards(){
+    get('an-cards').innerHTML=['ibu','para'].map(drug=>{
+      const r=profile(drug);
+      return `<div class="an-med"><h3>${name(drug)}</h3><label for="an-profile-${drug}">Einnahmeform</label><select id="an-profile-${drug}">${Object.entries(C.profiles).filter(([,p])=>p.drug===drug).map(([key,p])=>`<option value="${key}" ${key===r.key?'selected':''}>${p.label}</option>`).join('')}</select><label for="an-dose-${drug}">Dosis in mg</label><input id="an-dose-${drug}" type="number" min="1" max="20000" step="1" inputmode="numeric" value="${Number(A.config.doses[drug])||r.dose}"><div class="small" id="an-rule-${drug}"></div><div id="an-summary-${drug}"></div><div class="actions"><button class="primary" id="an-now-${drug}">${r.route==='iv'?'Jetzt erhalten':'Jetzt genommen'}</button></div></div>`;
+    }).join('');
+    for(const drug of ['ibu','para']){
+      get('an-profile-'+drug).addEventListener('change',e=>{A.config.selected[drug]=e.target.value;A.config.doses[drug]=C.profiles[e.target.value].dose;persist('Einnahmeform geändert.');drawCards();});
+      get('an-dose-'+drug).addEventListener('input',()=>{updateSummary(drug);});
+      get('an-dose-'+drug).addEventListener('change',()=>{const dose=selectedDose(drug);if(Number.isInteger(dose)&&dose>0&&dose<=20000){A.config.doses[drug]=dose;persist('Dosiswahl geändert.');}});
+      get('an-now-'+drug).addEventListener('click',()=>record(drug));
+    }
+    refresh();
+  }
+  function updateSummary(drug){
+    const now=Date.now(),r=profile(drug),dose=selectedDose(drug),active=C.windowAt(entries(),drug,now),total=C.sum(active),limit=C.cap(entries(),r,now);
+    const last=entries().filter(e=>e.drug===drug&&e.time<=now).sort((a,b)=>a.time-b.time).at(-1);
+    const reason=blocked(r),next=reason?null:C.next(entries(),r,dose,now);
+    get('an-rule-'+drug).textContent=`Präparategrenze: ${mg(r.single)} je Gabe · ${r.interval?r.interval+' h Abstand':'Abstand noch offen'} · ${mg(r.max)} / 24 h`;
+    const invalid=!Number.isInteger(dose)||dose<=0||dose>20000;
+    let status=reason || (invalid?'Bitte eine gültige Wirkstoffmenge in mg eingeben.':next===null?'Gewählte Dosis liegt außerhalb des hinterlegten Schemas.':next<=now?'Frühestens laut hinterlegtem Schema: jetzt':`Frühestens laut hinterlegtem Schema: ${when(next)}`);
+    if(drug==='ibu' && total>1200 && total<=limit) status='Warnung: über 1.200 mg / 24 h. Höherer oraler Dosisbereich nur nach ärztlicher Anordnung. '+status;
+    get('an-summary-'+drug).innerHTML=`<div class="an-total">${mg(total)} <span class="small">in den letzten 24 h</span></div><div class="small">p.o. ${mg(C.sum(active.filter(e=>e.route==='po')))} + i.v. ${mg(C.sum(active.filter(e=>e.route==='iv')))}</div><progress max="${limit}" value="${Math.min(limit,total)}" aria-label="Anteil der 24-Stunden-Grenze"></progress><div class="small">Gemeinsame Grenze: ${mg(limit)} · ${active.length} Gaben</div>${total>limit?'<div class="an-alert">Hinterlegte 24-h-Grenze überschritten. Medizinischen Rat einholen.</div>':''}<p class="small">Letzte Gabe: ${last?when(last.time)+' · '+mg(last.dose)+' '+way(last.route):'Noch keine dokumentiert'}</p><div class="${reason||next===null?'an-note':'an-next'}">${esc(status)}</div>${next!==null?`<div class="small">Für ${mg(dose)} (${way(r.route)}) · nicht automatisch fällig</div>`:''}`;
+    get('an-now-'+drug).disabled=dataError||invalid;
+  }
+  function refresh(){for(const d of ['ibu','para']) updateSummary(d);}
+  function warnFor(proposed){
+    const warnings=C.audit(proposed).map(x=>when(x.time)+': '+x.warnings.join('; '));
+    return warnings;
+  }
+  function approve(proposed,r){
+    const warnings=warnFor(proposed);
+    if(!r.interval) warnings.unshift('Verordneter Einnahmeabstand fehlt. Keine verlässliche Abstandsprüfung möglich.');
+    if(!warnings.length)return true;
+    return confirm(warnings.join('\n\n')+'\n\nNur wenn die Gabe tatsächlich schon verabreicht wurde: trotzdem dokumentieren?');
+  }
+  function record(drug){
+    if(dataError)return;
+    const dose=selectedDose(drug),r=profile(drug);
+    if(!Number.isInteger(dose)||dose<=0||dose>20000)return feedback('Bitte eine gültige Dosis in mg eingeben.',true);
+    const time=Date.now(); // Capture at the click, before any confirmation dialog.
+    const e={id:globalThis.crypto?.randomUUID?.()||String(time)+'-'+Math.random().toString(36).slice(2),drug,route:r.route,dose,time,createdAt:time,updatedAt:time,rule:r};
+    const proposed=[...entries(),e];
+    if(!approve(proposed,r))return;
+    A.entries=proposed;persist(`${name(drug)} ${mg(dose)} ${way(r.route)} um ${when(time)} erfasst.`);drawHistory();refresh();
+  }
+  function localValue(t){const d=new Date(t);return new Date(t-d.getTimezoneOffset()*60000).toISOString().slice(0,19);}
+  function edit(id){
+    const e=entries().find(e=>e.id===id);if(!e)return;
+    editId=id;get('an-edit-title').textContent=name(e.drug)+' · '+way(e.route);
+    get('an-edit-time').value=localValue(e.time);get('an-edit-dose').value=e.dose;get('an-editor').showModal();
+  }
+  function drawHistory(){
+    const audits=new Map(C.audit(entries()).map(e=>[e.id,e.warnings]));
+    get('an-count').textContent=`(${entries().length})`;
+    get('an-history').innerHTML=dataError?'<div class="an-alert">Analgesiedaten konnten nicht sicher gelesen werden.</div>':!entries().length?'<p class="small">Noch keine Gaben. Bereits erhaltene Klinikgaben mit „Jetzt erhalten“ erfassen und anschließend den Zeitpunkt korrigieren.</p>':[...entries()].sort((a,b)=>b.time-a.time).map(e=>`<div class="an-entry"><b>${name(e.drug)} · ${mg(e.dose)} · ${way(e.route)}</b><div>${when(e.time)}</div><div class="small">${esc(C.profiles[e.rule.key].label)}${e.updatedAt!==e.createdAt?' · korrigiert':''}</div>${audits.has(e.id)?`<div class="an-alert">${esc(audits.get(e.id).join(' · '))}</div>`:''}<div class="actions"><button class="secondary" data-an-edit="${esc(e.id)}">Zeit / Dosis ändern</button><button class="danger" data-an-delete="${esc(e.id)}">Löschen</button></div></div>`).join('');
+    get('an-history').querySelectorAll('[data-an-edit]').forEach(b=>b.addEventListener('click',()=>edit(b.dataset.anEdit)));
+    get('an-history').querySelectorAll('[data-an-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('Diese dokumentierte Gabe löschen?')){A.entries=entries().filter(e=>e.id!==b.dataset.anDelete);persist('Gabe gelöscht.');drawHistory();refresh();}}));
+  }
+  get('an-edit-form').addEventListener('submit',e=>{
+    e.preventDefault();const old=entries().find(x=>x.id===editId);if(!old)return;
+    const time=new Date(get('an-edit-time').value).getTime(),dose=Number(get('an-edit-dose').value);
+    if(!Number.isFinite(time)||time>Date.now()||!Number.isInteger(dose)||dose<=0||dose>20000){alert('Bitte einen gültigen Zeitpunkt in der Vergangenheit und eine positive Dosis in mg eingeben.');return;}
+    const updated={...old,time,dose,updatedAt:Date.now()},proposed=entries().map(x=>x.id===editId?updated:x);
+    if(!approve(proposed,updated.rule))return;
+    A.entries=proposed;get('an-editor').close();persist('Zeitpunkt / Dosis korrigiert; alle Gaben neu geprüft.');drawHistory();refresh();
+  });
+  get('an-edit-cancel').addEventListener('click',()=>get('an-editor').close());
+
+  window.refreshAnalgesiaUI=()=>{drawCards();drawHistory();refresh();};
+  get('an-settings').open=false;
+  drawCards();drawHistory();
+  if(dataError)feedback('Ungültige Analgesiedaten: Originaldaten wurden nicht überschrieben. Bitte ein Backup zur Prüfung exportieren.',true);
+  setInterval(refresh,1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
+})();
+
+(() => {
+  const containers=['todayTasks','exercise','babyFixed','mamaFixed','tlBaby','tlMama','scar'];
+  function taskKey(item){
+    const title=item.querySelector('.title')?.textContent.trim().replace(/^(BABY|MAMA)\s*·\s*/,'');
+    if(!title)return null;
+    const fixed=item.querySelector('.pill.fixed');
+    // The same task in Today and Plan shares its state. Routine tasks reset daily.
+    return 'task_v1|'+(fixed ? 'fixed|'+(D.profile.dob||'') : 'daily|'+today())+'|'+title;
+  }
+  function decorate(){
+    D.checks=D.checks||{};
+    for(const id of containers){
+      const container=document.getElementById(id);if(!container)continue;
+      for(const item of container.querySelectorAll('.item')){
+        const key=taskKey(item);if(!key)continue;
+        let input=item.querySelector(':scope > .task-toggle');
+        if(!input){
+          const body=document.createElement('div');body.className='task-body';
+          while(item.firstChild)body.appendChild(item.firstChild);
+          input=document.createElement('input');input.type='checkbox';input.className='task-toggle';
+          input.setAttribute('aria-label',body.querySelector('.title').textContent.trim()+' erledigt');
+          item.classList.add('task-row');item.append(input,body);
+          input.addEventListener('change',()=>{
+            D.checks[taskKey(item)]=input.checked;
+            if(!save())alert('Erledigt-Status nur für diese Sitzung gespeichert. Bitte bei Bedarf ein Backup exportieren.');
+            decorate();
+          });
+        }
+        input.checked=!!D.checks[key];item.classList.toggle('task-done',input.checked);
+      }
+    }
+  }
+  const previousRender=render;
+  render=function(){previousRender();decorate();};
+  decorate();
+})();
+
+(() => {
+  const nav=document.querySelector('.tabs');nav.setAttribute('aria-label','Hauptnavigation');
+  const originalActivate=activateTab;
+  activateTab=function(id){
+    originalActivate(id);
+    nav.querySelectorAll('button').forEach(b=>{
+      if(b.dataset.v===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+    });
+    if(matchMedia('(max-width:600px)').matches)window.scrollTo({top:0,behavior:'instant'});
+  };
+  nav.querySelector('.on')?.setAttribute('aria-current','page');
+  // Let the whole task text act as the checkbox's touch target.
+  document.addEventListener('click',e=>{
+    if(e.target.closest('input,button,a,select,textarea,label,summary'))return;
+    const row=e.target.closest('.task-row,.check');
+    const check=row?.querySelector('input[type=checkbox]');
+    if(check)check.click();
+  });
+  // Keep the bottom navigation out of the way of the iOS software keyboard.
+  const viewport=window.visualViewport;
+  function keyboard(){
+    const editing=document.activeElement?.matches('input:not([type=checkbox]),textarea,select');
+    document.body.classList.toggle('iphone-keyboard',!!(editing&&viewport&&window.innerHeight-viewport.height>140));
+  }
+  viewport?.addEventListener('resize',keyboard);
+  document.addEventListener('focusin',keyboard);document.addEventListener('focusout',()=>setTimeout(keyboard,0));
+})();
+
+</script><!-- analgesia-script-end --><aside id="backupReminder" hidden aria-label="Datensicherung"><p role="status">Ungesicherte Änderungen vorhanden</p><button type="button" onclick="exportJSON()">Jetzt sichern · in Dateien ablegen</button></aside>
+<script>
+// Compare the entire exported data object, including future persisted fields.
+// Backup metadata stays separate from medical data and the JSON format.
+let backupSnapshot=null;
+const backupKey=K+'_jsonBackupSnapshot';
+function refreshBackup(){
+  const dirty=JSON.stringify(D)!==backupSnapshot;
+  document.getElementById('backupReminder').hidden=!dirty;
+  document.body.classList.toggle('backup-pending',dirty);
+}
+function rememberBackup(snapshot){
+  backupSnapshot=snapshot;
+  try{localStorage.setItem(backupKey,snapshot);}catch(e){/* Session tracking still works. */}
+  refreshBackup();
+}
+try{
+  backupSnapshot=localStorage.getItem(backupKey);
+  // A fresh, untouched app needs no backup; existing data without a backup does.
+  if(backupSnapshot===null && localStorage.getItem(K)===null)backupSnapshot=JSON.stringify(D);
+}catch(e){backupSnapshot=JSON.stringify(D);}
+refreshBackup();
+</script><script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+</script></body></html>
