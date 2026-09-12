@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="4.4"><title>Wochenbett Begleiter</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="4.5"><title>Wochenbett Begleiter</title><style>
 :root{
   --bg1:#fbf7f8;
   --bg2:#f5f2f7;
@@ -685,7 +685,7 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
 .growth-legend span::before{content:'—';margin-right:4px}.growth-pct{font-size:24px;font-weight:760}.growth-pct small{font-size:12px;font-weight:500;color:var(--muted)}
 @media(max-width:760px){.tabs{grid-template-columns:repeat(6,minmax(0,1fr))}.tabs button{font-size:10px;padding-left:1px;padding-right:1px}.feedTimerBtn{min-height:88px}.growth-grid{grid-template-columns:1fr}}
 
-/* v4.4 Test: interaktive Perzentilen */
+/* v4.5 Test: interaktive Perzentilen */
 .growth-chart{position:relative;cursor:zoom-in;border-radius:14px;transition:background .15s ease}
 .growth-chart:active{background:rgba(216,137,159,.06)}
 .growth-chart .tap-hint{font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
@@ -704,7 +704,19 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
   #growthFullscreen .growth-fullscreen-stage{position:absolute;width:100vh;height:100vw;left:50%;top:50%;transform:translate(-50%,-50%) rotate(90deg);padding:12px 18px}
   #growthFullscreen .growth-fullscreen-chart svg{max-height:calc(100vw - 60px)}
 }
-</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v4.4</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
+
+/* v4.5 TEST: dynamischer Zoom in Perzentilen-Vollbildansicht */
+#growthFullscreen .growth-fullscreen-chart{position:relative;overflow:hidden}
+#growthFullscreen .growth-fullscreen-chart .zoom-chart-wrap{flex:1;min-height:0;display:flex;flex-direction:column;touch-action:none;user-select:none;-webkit-user-select:none;overscroll-behavior:none}
+#growthFullscreen .growth-fullscreen-chart .zoom-chart-wrap svg{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#growthFullscreen .growth-fullscreen-chart .zoom-chart-wrap.dragging svg{cursor:grabbing}
+.growth-zoom-toolbar{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 3px;flex-wrap:wrap}
+.growth-zoom-toolbar button{width:auto;min-width:42px;padding:7px 11px;border-radius:11px;font-size:13px;line-height:1;background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}
+.growth-zoom-toolbar .zoom-reset{min-width:auto;padding-left:12px;padding-right:12px}
+.growth-zoom-info{text-align:center;color:var(--muted);font-size:11px;line-height:1.25;margin:1px 0 2px}
+.zoom-axis text{fill:#77636d;font-size:13px}.zoom-grid{stroke:#eee5e9;stroke-width:1}.zoom-axis-line{stroke:#b9adb3;stroke-width:1.2}
+
+</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v4.5</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
 <section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div><div id="wakeStatus" style="margin-top:12px"></div></div><div class="card"><h2>Schnell erfassen</h2><div class="quickgrid"><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('weight').focus(),50)">⚖︎ Gewicht</button><button class="secondary" onclick="activateTab('feedingTimer')">Stilltimer</button><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button><button class="secondary" onclick="activateTab('mamaAnalgesia')">Analgesie</button><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('babyCheck').scrollIntoView({behavior:'smooth'}),50)">Baby-Check</button></div><div id="todayQuickStats"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
 <section id="feedingTimer" class="view"><div class="section-kicker">Stillen</div>
   <div class="card"><h2>Stilltimer</h2><p class="small">Seite antippen zum Starten, denselben Button erneut antippen zum Stoppen. Beim Wechsel auf die andere Seite wird der laufende Abschnitt automatisch beendet und die andere Seite gestartet.</p>
@@ -718,7 +730,7 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
 <section id="baby" class="view"><div class="section-kicker">Baby</div><div class="card"><h2>Wachstum</h2><div class="grid"><div><label>Datum</label><input id="mdate" type="date"></div><div><label>Gewicht in g</label><input id="weight" type="number" inputmode="numeric"></div><div><label>Körperlänge in cm, optional</label><input id="height" type="number" inputmode="decimal" step="0.1"></div><div><label>Schädelumfang in cm, optional</label><input id="headcirc" type="number" inputmode="decimal" step="0.1"></div></div><div style="margin-top:10px"><label>Notiz, optional</label><input id="note"></div><div class="actions"><button class="primary" onclick="addWeight()">Messung speichern</button></div><div id="weightSummary"></div></div><div class="card"><h2>Körpertemperatur</h2><div class="grid"><div><label>Zeitpunkt</label><input id="tempTime" type="datetime-local"></div><div><label>Temperatur in °C</label><input id="tempValue" type="number" inputmode="decimal" step="0.1" min="30" max="43"></div><div><label>Messort</label><select id="tempSite"><option value="rectal">rektal</option><option value="axillary">axillär</option><option value="ear">Ohr</option><option value="other">sonstige</option></select></div></div><div class="actions"><button class="primary" onclick="addTemperature()">Temperatur speichern</button></div><div id="temperatureSummary"></div><div id="temperatureHistory"></div><p class="small">Orientierung: Neugeborene liegen typischerweise bei etwa 36,5–37,5 °C. Unter 3 Monaten gilt ab 38,0 °C bereits Fieber und als Warnzeichen. Der Messort beeinflusst den Messwert; auffällige oder grenzwertige Werte sollten mit einer verlässlichen Methode kontrolliert werden.</p><div class="source">Quellen: <a href="https://register.awmf.org/assets/guidelines/027-074p1_S3_Fiebermanagement-Kinder-Jugendliche_2025-07.pdf" target="_blank">AWMF S3 Fiebermanagement 2025</a> · <a href="https://www.who.int/data/gho/indicator-metadata-registry/imr-details/10324" target="_blank">WHO · Normothermia on admission</a></div></div><div class="card"><h2>Dynamischer Wiegeplaner</h2><div id="weighPlanner"></div><p class="small">Das konkrete Kontrollintervall ist pragmatische App Logik. Medizinische Warnschwellen werden davon getrennt behandelt.</p></div><div class="card"><h2>Gewichtskurve</h2><div id="chart"></div></div><div class="card"><h2>WHO Perzentilen</h2><div id="growthPercentileSummary"></div><div class="growth-grid"><div><h3>Gewicht für Alter</h3><div id="weightPercentileChart" class="growth-chart"></div></div><div><h3>Länge für Alter</h3><div id="lengthPercentileChart" class="growth-chart"></div></div><div><h3>Schädelumfang für Alter</h3><div id="headPercentileChart" class="growth-chart"></div></div></div><p class="small">WHO Child Growth Standards, geschlechtsspezifisch, 0–13 Wochen. Für Tage zwischen den veröffentlichten Wochenwerten werden die LMS Parameter linear interpoliert.</p><div class="source">Quelle: <a href="https://www.who.int/tools/child-growth-standards/standards/weight-for-age" target="_blank">WHO · Weight-for-age</a> · <a href="https://www.who.int/tools/child-growth-standards/standards/length-height-for-age" target="_blank">WHO · Length-for-age</a> · <a href="https://www.who.int/tools/child-growth-standards/standards/head-circumference-for-age" target="_blank">WHO · Head circumference-for-age</a></div></div><div class="card"><h2>Ausscheidungen</h2><p class="small">Ein Tap dokumentiert den Zeitpunkt.</p><div class="quickgrid"><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button></div><div id="babyLogSummary"></div><div id="babyLogHistory"></div></div><div class="card"><h2>Baby Tagescheck</h2><div id="babyCheck"></div></div><div class="card"><h2>Vorsorge und Prophylaxe</h2><div id="babyFixed"></div></div><div class="card"><h2>Messungen</h2><div id="history"></div></div></section>
 <section id="mamaAnalgesia" class="view"><div class="section-kicker">Mama: Analgesie</div><!-- analgesia-module-start -->
 <div class="card" id="analgesia">
-  <div class="an-heading"><div><div class="section-kicker">Nach Sectio</div><h2>Schmerz &amp; Analgesie</h2></div><span class="pill dyn">Dokumentation</span></div>
+  <div class="an-heading"><div><div class="section-kicker">Nach Sectio</div><h2>Schmerz &amp; Analgesie</h2></div><span class="pill dyn">Testansicht</span></div>
   <p class="small">Ein Klick speichert die aktuelle Uhrzeit. Zeit und Dosis lassen sich im Verlauf ändern. Die Berechnung berücksichtigt die dokumentierten Gaben, einschließlich p.o. und i.v.</p>
   <details id="an-settings" open><summary>Einstellungen · 70 kg</summary>
     <p class="small">Mit etwa 70 kg gelten die hinterlegten Erwachsenenwerte; das Gewicht erhöht die Höchstdosen nicht. Diese Standardwerte setzen voraus, dass keine relevanten Gegenanzeigen oder individuellen Dosisanpassungen bestehen. Bei Leber-/Nierenproblemen, Dehydratation, Mangelernährung oder anderen Risiken das individuelle Schema mit dem Behandlungsteam klären. Das Standardprofil bestätigt keine ärztliche Verordnung.</p>
@@ -737,7 +749,7 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
     </tbody></table></div>
     <p class="small">*Hier nur für Erwachsene &gt; 50 kg ohne Risikofaktoren. Die Fachinformationen enthalten niedrigere Grenzen bzw. längere Abstände für besondere Patientengruppen. Die Höchstdosis ist kein Einnahmeziel. I.v.-Gaben werden ausschließlich durch Fachpersonal verabreicht; der Zeitstempel bezeichnet den Infusionsbeginn, die Dosis die tatsächlich verabreichte Wirkstoffmenge in mg.</p>
     <p class="small">Persönliches orales Schema: 400 mg frühestens alle 4 Stunden; 600 mg frühestens alle 6 Stunden. Beide entsprechen bei regelmäßiger Gabe höchstens 2.400 mg in 24 Stunden. Diese Abstände sind eure hinterlegte Vorgabe, keine allgemeine Fachinformationsvorgabe. Eine höhere Tagesgrenze verkürzt den Mindestabstand nicht. Für den rezeptfreien 1.200-mg-Modus bleibt der Abstand von 6 Stunden bestehen.</p>
-    <p class="small"><b>Regeln dieser App:</b> Bei einem Wechsel gilt konservativ der längere Abstand der beiden benachbarten Gaben. Bei rein oralem Ibuprofen gilt die aktuell gewählte Grenze für die gesamte Wirkstoffmenge. Mit einer i.v.-Ibuprofen-Gabe im 24-h-Fenster bleibt die gemeinsame Prüfgrenze konservativ bei 1.200 mg. Bei Paracetamol mit i.v.-Anteil zählen höchstens vier Gaben insgesamt. Dies sind konservative App-Regeln für den Wechsel, keine zusätzliche Fachinformationsvorgabe.</p>
+    <p class="small"><b>Regeln dieser Testansicht:</b> Bei einem Wechsel gilt konservativ der längere Abstand der beiden benachbarten Gaben. Bei rein oralem Ibuprofen gilt die aktuell gewählte Grenze für die gesamte Wirkstoffmenge. Mit einer i.v.-Ibuprofen-Gabe im 24-h-Fenster bleibt die gemeinsame Prüfgrenze konservativ bei 1.200 mg. Bei Paracetamol mit i.v.-Anteil zählen höchstens vier Gaben insgesamt. Dies sind konservative App-Regeln für den Wechsel, keine zusätzliche Fachinformationsvorgabe.</p>
     <p class="small">„Frühestens laut hinterlegtem Schema“ berücksichtigt Einzeldosis, Abstand, gleitende Summe und gegebenenfalls Anzahl der Gaben. Es ist keine individuelle medizinische Freigabe. Bereits verabreichte Gaben können trotz Warnung dokumentiert werden. Bei vermuteter Überdosierung sofort medizinischen Rat einholen, bei Paracetamol auch ohne Beschwerden.</p>
     <ul class="source">
       <li><a target="_blank" rel="noopener" href="https://www.fachinfo.de/fi/pdf/004505">IBU-ratiopharm 200 mg akut · Fachinformation</a></li>
@@ -767,12 +779,12 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
     <div id="firstStartNote" class="firststart-note" style="display:none">
       Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
     </div>
-    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v4.4</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v4.5</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
   </div>
 </div>
 <p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
 <script>
-const APP_VERSION='4.4';
+const APP_VERSION='4.5';
 const K='wochenbett_v3';const DATA_VERSION=4;let D={dataVersion:DATA_VERSION,profile:{name:'',sex:'',dob:'',bw:'',bl:'',btime:'',discharge:'',feeding:'stillen'},weights:[],temperatures:[],babyLog:[],feedingSessions:[],feedingTimer:{side:null,start:null},hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
 try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{},temperatures:Array.isArray(x.temperatures)?x.temperatures:[],babyLog:Array.isArray(x.babyLog)?x.babyLog:[],feedingSessions:Array.isArray(x.feedingSessions)?x.feedingSessions:[],feedingTimer:x.feedingTimer&&typeof x.feedingTimer==='object'?x.feedingTimer:{side:null,start:null}}}catch(e){}
 // Datenmigration: alte v3.x-Daten bleiben kompatibel; neue Felder werden ergänzt.
@@ -1366,4 +1378,98 @@ try{
   if(backupSnapshot===null && localStorage.getItem(K)===null)backupSnapshot=JSON.stringify(D);
 }catch(e){backupSnapshot=JSON.stringify(D);}
 refreshBackup();
-</script><script>if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(console.error));}</script></body></html>
+</script><script>if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(console.error));}</script>
+<script>
+/* v4.5 TEST: echter Datenzoom fuer die WHO-Perzentilen im Vollbild. */
+const GrowthZoom = (()=>{
+  const W=1000,H=500,L=76,R=46,T=30,B=66;
+  let st=null, gesture=null, lastTap=0;
+  const Z={3:-1.880793608,10:-1.281551566,50:0,90:1.281551566,97:1.880793608};
+  function pvDay(metric,d,p){
+    const l=lmsAt(D.profile.sex,metric,Math.max(0,Math.min(91,d))); if(!l)return NaN;
+    const z=Z[p]; return Math.abs(l.L)<1e-9?l.M*Math.exp(l.S*z):l.M*Math.pow(1+l.L*l.S*z,1/l.L);
+  }
+  function fullBounds(metric){
+    const vals=[]; for(const p of [3,10,50,90,97])for(let d=0;d<=91;d+=1)vals.push(pvDay(metric,d,p));
+    const pts=chartPoints(metric); vals.push(...pts.map(q=>q.v));
+    const lo=Math.min(...vals),hi=Math.max(...vals),pad=metric==='weight'?.16:metric==='length'?1.0:.75;
+    return {x0:0,x1:91,y0:lo-pad,y1:hi+pad};
+  }
+  function minYRange(metric){return metric==='weight'?.35:metric==='length'?2.0:1.4}
+  function reset(metric){const f=fullBounds(metric);st={metric,x0:f.x0,x1:f.x1,y0:f.y0,y1:f.y1,full:f};render();}
+  function clamp(){
+    if(!st)return; const f=st.full;
+    let xr=st.x1-st.x0, yr=st.y1-st.y0;
+    xr=Math.max(2,Math.min(91,xr)); yr=Math.max(minYRange(st.metric),Math.min(f.y1-f.y0,yr));
+    let x0=st.x0,x1=x0+xr,y0=st.y0,y1=y0+yr;
+    if(x0<f.x0){x0=f.x0;x1=x0+xr} if(x1>f.x1){x1=f.x1;x0=x1-xr}
+    if(y0<f.y0){y0=f.y0;y1=y0+yr} if(y1>f.y1){y1=f.y1;y0=y1-yr}
+    st.x0=x0;st.x1=x1;st.y0=y0;st.y1=y1;
+  }
+  function niceStep(span,target=6){
+    const raw=span/target,pow=Math.pow(10,Math.floor(Math.log10(raw))),n=raw/pow;
+    return (n<=1?1:n<=2?2:n<=5?5:10)*pow;
+  }
+  function ticks(lo,hi,target=6){const step=niceStep(hi-lo,target),a=Math.ceil(lo/step)*step,res=[];for(let v=a;v<=hi+step*.001;v+=step)res.push(+v.toFixed(8));return {step,res}}
+  function xLabel(v){if(v<14)return Math.round(v)+' d';const w=v/7;return (Math.abs(w-Math.round(w))<.05?Math.round(w):w.toFixed(1))+' Wo'}
+  function yLabel(v){return st.metric==='weight'?v.toFixed(v<1?2:1)+' kg':v.toFixed(1)+' cm'}
+  function map(){const xr=st.x1-st.x0,yr=st.y1-st.y0;return {sx:d=>L+(d-st.x0)/xr*(W-L-R),sy:v=>T+(st.y1-v)/yr*(H-T-B)}}
+  function curvePath(p,sx,sy){
+    const range=st.x1-st.x0, step=Math.max(.15,range/160); let d=''; let first=true;
+    for(let x=st.x0;x<=st.x1+step*.25;x+=step){const xx=Math.min(st.x1,x),y=pvDay(st.metric,xx,p);d+=(first?'M':'L')+sx(xx).toFixed(2)+','+sy(y).toFixed(2);first=false;}return d;
+  }
+  function render(){
+    const host=document.getElementById('growthFullscreenChart'); if(!host||!st)return; clamp();
+    const {sx,sy}=map(), xt=ticks(st.x0,st.x1,7), yt=ticks(st.y0,st.y1,6), pts=chartPoints(st.metric), unit=st.metric==='weight'?'g':'cm';
+    const clip='growthZoomClip';
+    const gridX=xt.res.map(v=>`<line class="zoom-grid" x1="${sx(v)}" y1="${T}" x2="${sx(v)}" y2="${H-B}"/><text x="${sx(v)}" y="${H-B+25}" text-anchor="middle">${xLabel(v)}</text>`).join('');
+    const gridY=yt.res.map(v=>`<line class="zoom-grid" x1="${L}" y1="${sy(v)}" x2="${W-R}" y2="${sy(v)}"/><text x="${L-10}" y="${sy(v)+4}" text-anchor="end">${yLabel(v)}</text>`).join('');
+    const curves=[3,10,50,90,97].map(p=>`<path d="${curvePath(p,sx,sy)}" fill="none" stroke="${p===50?'#8b5570':'#c9b9c1'}" stroke-width="${p===50?3.6:2.1}" ${p===50?'':'stroke-dasharray="7 6"'}/>`).join('');
+    const labels=[3,10,50,90,97].map(p=>{const x=st.x1,y=pvDay(st.metric,x,p);return y>=st.y0&&y<=st.y1?`<text x="${W-R-5}" y="${sy(y)-4}" text-anchor="end" font-size="13" fill="#77636d">P${p}</text>`:''}).join('');
+    const pointHtml=pts.filter(q=>q.d>=st.x0&&q.d<=st.x1&&q.v>=st.y0&&q.v<=st.y1).map(q=>{const r=growthPercentile(st.metric,q.raw,q.date),p=fmtP(r),value=st.metric==='weight'?Math.round(q.raw):Number(q.raw).toFixed(1);return `<circle class="growth-point" cx="${sx(q.d)}" cy="${sy(q.v)}" r="9" fill="#b95f7e" data-metric="${st.metric}" data-day="${q.d}" data-value="${value}" data-unit="${unit}" data-p="${p}" onclick="event.stopPropagation();showGrowthPoint(this)"/>`}).join('');
+    const zoom=(91/(st.x1-st.x0)).toFixed(1).replace('.0','');
+    host.innerHTML=`<div class="growth-zoom-toolbar"><button type="button" onclick="GrowthZoom.zoomBy(1.35)">＋</button><button type="button" class="zoom-reset" onclick="GrowthZoom.resetCurrent()">Zurücksetzen</button><button type="button" onclick="GrowthZoom.zoomBy(.74)">−</button></div><div class="growth-zoom-info">Pinch zum Zoomen · Ziehen zum Verschieben · Doppeltipp zum Zurücksetzen · Zoom ${zoom}×</div><div id="growthZoomWrap" class="zoom-chart-wrap"><svg id="growthZoomSvg" viewBox="0 0 ${W} ${H}" aria-label="Zoomfähige WHO-Perzentilenkurve ${metricLabel(st.metric)}"><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></clipPath></defs><g class="zoom-axis">${gridX}${gridY}<line class="zoom-axis-line" x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}"/><line class="zoom-axis-line" x1="${L}" y1="${T}" x2="${L}" y2="${H-B}"/></g><g clip-path="url(#${clip})">${curves}${labels}${pointHtml}</g></svg></div>`;
+    bind();
+  }
+  function svgPoint(t){const svg=document.getElementById('growthZoomSvg');if(!svg)return null;const p=new DOMPoint(t.clientX,t.clientY),m=svg.getScreenCTM();if(!m)return null;return p.matrixTransform(m.inverse())}
+  function frac(t){const p=svgPoint(t);if(!p)return null;return {fx:(p.x-L)/(W-L-R),fy:(p.y-T)/(H-T-B)}}
+  function dataAt(f,state=st){return {x:state.x0+f.fx*(state.x1-state.x0),y:state.y1-f.fy*(state.y1-state.y0)}}
+  function bind(){
+    const wrap=document.getElementById('growthZoomWrap'); if(!wrap)return;
+    wrap.ontouchstart=e=>{
+      if(e.touches.length===2){
+        const a=e.touches[0],b=e.touches[1],fa=frac(a),fb=frac(b);if(!fa||!fb)return;
+        const fc={fx:(fa.fx+fb.fx)/2,fy:(fa.fy+fb.fy)/2};
+        gesture={type:'pinch',base:{...st},dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),anchor:dataAt(fc,{...st})};
+      }else if(e.touches.length===1){const f=frac(e.touches[0]);if(!f)return;gesture={type:'pan',base:{...st},anchor:dataAt(f,{...st})};wrap.classList.add('dragging');}
+    };
+    wrap.ontouchmove=e=>{
+      if(!gesture)return;e.preventDefault();
+      if(e.touches.length===2){
+        const a=e.touches[0],b=e.touches[1],fa=frac(a),fb=frac(b);if(!fa||!fb)return;
+        const fc={fx:(fa.fx+fb.fx)/2,fy:(fa.fy+fb.fy)/2},cur=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),scale=Math.max(.08,Math.min(12,gesture.dist/Math.max(cur,1)));
+        const bx=gesture.base.x1-gesture.base.x0,by=gesture.base.y1-gesture.base.y0,xr=Math.max(2,Math.min(91,bx*scale)),yr=Math.max(minYRange(st.metric),Math.min(st.full.y1-st.full.y0,by*scale));
+        st.x0=gesture.anchor.x-fc.fx*xr;st.x1=st.x0+xr;st.y1=gesture.anchor.y+fc.fy*yr;st.y0=st.y1-yr;clamp();render();
+      }else if(e.touches.length===1&&gesture.type==='pan'){
+        const f=frac(e.touches[0]);if(!f)return;const xr=gesture.base.x1-gesture.base.x0,yr=gesture.base.y1-gesture.base.y0;
+        st.x0=gesture.anchor.x-f.fx*xr;st.x1=st.x0+xr;st.y1=gesture.anchor.y+f.fy*yr;st.y0=st.y1-yr;clamp();render();
+      }
+    };
+    wrap.ontouchend=e=>{wrap.classList.remove('dragging');if(e.touches.length===0){gesture=null;const n=Date.now();if(n-lastTap<320){lastTap=0;reset(st.metric)}else lastTap=n;}else if(e.touches.length===1){const f=frac(e.touches[0]);if(f)gesture={type:'pan',base:{...st},anchor:dataAt(f,{...st})};}};
+    wrap.onwheel=e=>{e.preventDefault();const f=frac(e);if(!f)return;const anchor=dataAt(f),factor=e.deltaY<0?.82:1.22,xr=Math.max(2,Math.min(91,(st.x1-st.x0)*factor)),yr=Math.max(minYRange(st.metric),Math.min(st.full.y1-st.full.y0,(st.y1-st.y0)*factor));st.x0=anchor.x-f.fx*xr;st.x1=st.x0+xr;st.y1=anchor.y+f.fy*yr;st.y0=st.y1-yr;render();};
+  }
+  function open(metric){reset(metric)}
+  function zoomBy(factor){if(!st)return;const cx=(st.x0+st.x1)/2,cy=(st.y0+st.y1)/2,xr=Math.max(2,Math.min(91,(st.x1-st.x0)/factor)),yr=Math.max(minYRange(st.metric),Math.min(st.full.y1-st.full.y0,(st.y1-st.y0)/factor));st.x0=cx-xr/2;st.x1=cx+xr/2;st.y0=cy-yr/2;st.y1=cy+yr/2;render()}
+  function resetCurrent(){if(st)reset(st.metric)}
+  return {open,zoomBy,resetCurrent};
+})();
+
+function openGrowthFullscreen(metric){
+  const fs=$('growthFullscreen'),title=$('growthFullscreenTitle');if(!fs)return;
+  title.textContent=metricLabel(metric)+' · WHO-Perzentilen';fs.hidden=false;document.body.style.overflow='hidden';GrowthZoom.open(metric);
+  try{if(fs.requestFullscreen&&!document.fullscreenElement)fs.requestFullscreen().catch(()=>{});}catch(e){}
+  try{screen.orientation?.lock?.('landscape').catch(()=>{});}catch(e){}
+}
+</script>
+
+</body></html>
