@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="4.7.1"><title>Wochenbett Begleiter</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="4.8"><title>Wochenbett Begleiter</title><style>
 :root{
   --bg1:#fbf7f8;
   --bg2:#f5f2f7;
@@ -716,7 +716,23 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
 .growth-zoom-info{text-align:center;color:var(--muted);font-size:11px;line-height:1.25;margin:1px 0 2px}
 .zoom-axis text{fill:#77636d;font-size:13px}.zoom-grid{stroke:#eee5e9;stroke-width:1}.zoom-axis-line{stroke:#b9adb3;stroke-width:1.2}
 
-</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v4.7.1</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
+
+/* v4.8 · nach Datum gruppierte Historien */
+.day-groups{display:grid;gap:10px;margin-top:10px}
+.day-group{border:1px solid #eadde2;border-radius:14px;background:#fff;overflow:hidden}
+.day-group>summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;gap:8px 12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;background:#fbf7f9}
+.day-group>summary::-webkit-details-marker{display:none}
+.day-group>summary:after{content:'⌄';font-size:20px;line-height:1;color:#8c6f7a;transition:transform .15s ease;margin-left:auto}
+.day-group[open]>summary:after{transform:rotate(180deg)}
+.day-group-title{font-weight:750;color:#3e3036;white-space:nowrap}
+.day-group-summary{font-size:13px;color:#715e67;flex:1;min-width:180px;text-align:right;padding-top:1px}
+.day-group[open] .day-group-summary{color:#5d4852}
+.day-group-body{padding:10px 12px 12px;display:grid;gap:8px;border-top:1px solid #f0e6ea}
+.day-group-body .item,.day-group-body .an-entry{margin:0}
+.day-group-body table{margin:0;width:100%}
+@media(max-width:520px){.day-group>summary{display:grid;grid-template-columns:1fr auto}.day-group-summary{grid-column:1/-1;text-align:left;min-width:0}.day-group>summary:after{grid-column:2;grid-row:1}}
+
+</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v4.8</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
 <section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div><div id="wakeStatus" style="margin-top:12px"></div></div><div class="card"><h2>Schnell erfassen</h2><div class="quickgrid"><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('weight').focus(),50)">⚖︎ Gewicht</button><button class="secondary" onclick="activateTab('feedingTimer')">Stilltimer</button><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button><button class="secondary" onclick="activateTab('mamaAnalgesia')">Analgesie</button><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('babyCheck').scrollIntoView({behavior:'smooth'}),50)">Baby-Check</button></div><div id="todayQuickStats"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
 <section id="feedingTimer" class="view"><div class="section-kicker">Stillen</div>
   <div class="card"><h2>Stilltimer</h2><p class="small">Seite antippen zum Starten, denselben Button erneut antippen zum Stoppen. Beim Wechsel auf die andere Seite wird der laufende Abschnitt automatisch beendet und die andere Seite gestartet.</p>
@@ -779,12 +795,12 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
     <div id="firstStartNote" class="firststart-note" style="display:none">
       Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
     </div>
-    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Stillabstände</h2><p class="small">Maximaler Abstand zwischen dem Beginn zweier Stillmahlzeiten. Reicht der zunächst berechnete nächste Stillzeitpunkt in die andere Tagesphase, gilt der Abstand dieser Zielphase.</p><div class="grid"><div><label>Tag ab</label><input id="feedDayStart" type="time" value="06:00"></div><div><label>Nacht ab</label><input id="feedNightStart" type="time" value="22:00"></div><div><label>Max. Abstand Tag in h</label><input id="feedDayHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="3"></div><div><label>Max. Abstand Nacht in h</label><input id="feedNightHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="4"></div></div><div class="actions"><button class="primary" onclick="saveFeedingSchedule()">Stillabstände speichern</button></div><div id="feedingScheduleStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v4.7.1</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Stillabstände</h2><p class="small">Maximaler Abstand zwischen dem Beginn zweier Stillmahlzeiten. Reicht der zunächst berechnete nächste Stillzeitpunkt in die andere Tagesphase, gilt der Abstand dieser Zielphase.</p><div class="grid"><div><label>Tag ab</label><input id="feedDayStart" type="time" value="06:00"></div><div><label>Nacht ab</label><input id="feedNightStart" type="time" value="22:00"></div><div><label>Max. Abstand Tag in h</label><input id="feedDayHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="3"></div><div><label>Max. Abstand Nacht in h</label><input id="feedNightHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="4"></div></div><div class="actions"><button class="primary" onclick="saveFeedingSchedule()">Stillabstände speichern</button></div><div id="feedingScheduleStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v4.8</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
   </div>
 </div>
 <p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
 <script>
-const APP_VERSION='4.7.1';
+const APP_VERSION='4.8';
 const K='wochenbett_v3';const DATA_VERSION=5;let D={dataVersion:DATA_VERSION,profile:{name:'',sex:'',dob:'',bw:'',bl:'',btime:'',discharge:'',feeding:'stillen'},weights:[],temperatures:[],babyLog:[],feedingSessions:[],feedingTimer:{side:null,start:null},feedingSchedule:{dayHours:3,nightHours:4,dayStart:'06:00',nightStart:'22:00'},hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
 try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{},temperatures:Array.isArray(x.temperatures)?x.temperatures:[],babyLog:Array.isArray(x.babyLog)?x.babyLog:[],feedingSessions:Array.isArray(x.feedingSessions)?x.feedingSessions:[],feedingTimer:x.feedingTimer&&typeof x.feedingTimer==='object'?x.feedingTimer:{side:null,start:null},feedingSchedule:{...D.feedingSchedule,...(x.feedingSchedule||{})}}}catch(e){}
 // Datenmigration: alte v3.x-Daten bleiben kompatibel; neue Felder werden ergänzt.
@@ -1317,8 +1333,19 @@ if(typeof module!=='undefined' && module.exports) module.exports=AnalgesiaCore;
   }
   function drawHistory(){
     const audits=new Map(C.audit(entries()).map(e=>[e.id,e.warnings]));
-    get('an-count').textContent=`(${entries().length})`;
-    get('an-history').innerHTML=dataError?'<div class="an-alert">Analgesiedaten konnten nicht sicher gelesen werden.</div>':!entries().length?'<p class="small">Noch keine Gaben. Bereits erhaltene Klinikgaben mit „Jetzt erhalten“ erfassen und anschließend den Zeitpunkt korrigieren.</p>':[...entries()].sort((a,b)=>b.time-a.time).map(e=>`<div class="an-entry"><b>${name(e.drug)} · ${mg(e.dose)} · ${way(e.route)}${e.pain!==null&&e.pain!==undefined?' · Schmerz '+e.pain+'/10':''}</b><div>${when(e.time)}</div><div class="small">${esc(C.profiles[e.rule.key].label)}${e.updatedAt!==e.createdAt?' · korrigiert':''}</div>${audits.has(e.id)?`<div class="an-alert">${esc(audits.get(e.id).join(' · '))}</div>`:''}<div class="actions"><button class="secondary" data-an-edit="${esc(e.id)}">Zeit / Dosis ändern</button><button class="danger" data-an-delete="${esc(e.id)}">Löschen</button></div></div>`).join('');
+    const list=[...entries()].sort((a,b)=>b.time-a.time);
+    get('an-count').textContent=`(${list.length})`;
+    if(dataError){get('an-history').innerHTML='<div class="an-alert">Analgesiedaten konnten nicht sicher gelesen werden.</div>';return;}
+    if(!list.length){get('an-history').innerHTML='<p class="small">Noch keine Gaben. Bereits erhaltene Klinikgaben mit „Jetzt erhalten“ erfassen und anschließend den Zeitpunkt korrigieren.</p>';return;}
+    const groups={};
+    for(const e of list){const k=localDayKey(e.time);(groups[k]??=[]).push(e)}
+    const keys=Object.keys(groups).sort().reverse();
+    get('an-history').innerHTML='<div class="day-groups">'+keys.map((k,idx)=>{
+      const es=groups[k], ibu=es.filter(e=>e.drug==='ibu').reduce((a,e)=>a+e.dose,0), para=es.filter(e=>e.drug==='para').reduce((a,e)=>a+e.dose,0);
+      const parts=[`${es.length} ${es.length===1?'Gabe':'Gaben'}`]; if(ibu)parts.push(`Ibu ${mg(ibu)}`); if(para)parts.push(`Para ${mg(para)}`);
+      const body=es.map(e=>`<div class="an-entry"><b>${name(e.drug)} · ${mg(e.dose)} · ${way(e.route)}${e.pain!==null&&e.pain!==undefined?' · Schmerz '+e.pain+'/10':''}</b><div>${new Date(e.time).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</div><div class="small">${esc(C.profiles[e.rule.key].label)}${e.updatedAt!==e.createdAt?' · korrigiert':''}</div>${audits.has(e.id)?`<div class="an-alert">${esc(audits.get(e.id).join(' · '))}</div>`:''}<div class="actions"><button class="secondary" data-an-edit="${esc(e.id)}">Zeit / Dosis ändern</button><button class="danger" data-an-delete="${esc(e.id)}">Löschen</button></div></div>`).join('');
+      return `<details class="day-group" ${idx===0?'open':''}><summary><span class="day-group-title">${dayLabelFromKey(k)}</span><span class="day-group-summary">${parts.join(' · ')}</span></summary><div class="day-group-body">${body}</div></details>`;
+    }).join('')+'</div>';
     get('an-history').querySelectorAll('[data-an-edit]').forEach(b=>b.addEventListener('click',()=>edit(b.dataset.anEdit)));
     get('an-history').querySelectorAll('[data-an-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('Diese dokumentierte Gabe löschen?')){A.entries=entries().filter(e=>e.id!==b.dataset.anDelete);persist('Gabe gelöscht.');drawHistory();refresh();}}));
   }
@@ -1553,6 +1580,64 @@ function openGrowthFullscreen(metric){
   try{if(fs.requestFullscreen&&!document.fullscreenElement)fs.requestFullscreen().catch(()=>{});}catch(e){}
   try{screen.orientation?.lock?.('landscape').catch(()=>{});}catch(e){}
 }
+</script>
+
+<script>
+/* v4.8: gemeinsame Tagesgruppierung für Verlaufsdaten */
+function localDayKey(value){
+  const d=value instanceof Date?value:new Date(value);
+  if(typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value))return value;
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function dayLabelFromKey(k){
+  const d=new Date(k+'T12:00:00');
+  return d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+function groupByDay(list,getValue){
+  const g={}; for(const x of list){const k=localDayKey(getValue(x));(g[k]??=[]).push(x)} return g;
+}
+function compactDuration(ms){
+  let min=Math.max(0,Math.round(ms/60000)),h=Math.floor(min/60);min%=60;
+  if(h&&min)return `${h}h ${min}min`; if(h)return `${h}h`; return `${min}min`;
+}
+function daySections(groups,summaryFn,bodyFn){
+  const keys=Object.keys(groups).sort().reverse();
+  if(!keys.length)return '<div class="empty">Noch keine Einträge.</div>';
+  return '<div class="day-groups">'+keys.map((k,i)=>`<details class="day-group" ${i===0?'open':''}><summary><span class="day-group-title">${dayLabelFromKey(k)}</span><span class="day-group-summary">${summaryFn(groups[k],k)}</span></summary><div class="day-group-body">${bodyFn(groups[k],k)}</div></details>`).join('')+'</div>';
+}
+function feedDaySummary(es){
+  const total=es.reduce((a,x)=>a+Math.max(0,x.end-x.start),0),L=es.filter(x=>x.side==='L').reduce((a,x)=>a+x.end-x.start,0),R=es.filter(x=>x.side==='R').reduce((a,x)=>a+x.end-x.start,0);
+  return `${compactDuration(total)} gesamt · ${compactDuration(L)} li · ${compactDuration(R)} re`;
+}
+const _renderFeedingTimer_v47=renderFeedingTimer;
+renderFeedingTimer=function(){
+  _renderFeedingTimer_v47();
+  const host=$('feedingHistory'); if(!host)return;
+  const list=[...(D.feedingSessions||[])].sort((a,b)=>b.start-a.start),groups=groupByDay(list,x=>x.start);
+  host.innerHTML=daySections(groups,feedDaySummary,es=>[...es].sort((a,b)=>b.start-a.start).map(x=>`<div class="item"><div class="title">${x.side==='L'?'Links':'Rechts'} · ${fmtDur(x.end-x.start)}${x.source==='manual'?' · manuell':''}</div><div class="text">${new Date(x.start).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}–${new Date(x.end).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</div><button class="danger" onclick="deleteFeedingSession(${x.id})">×</button></div>`).join(''));
+};
+const _renderBabyLog_v47=renderBabyLog;
+renderBabyLog=function(){
+  _renderBabyLog_v47(); const host=$('babyLogHistory'); if(!host)return;
+  const list=[...(D.babyLog||[])].filter(x=>x.type==='wet'||x.type==='stool').sort((a,b)=>b.time-a.time),groups=groupByDay(list,x=>x.time);
+  host.innerHTML=daySections(groups,es=>{const w=es.filter(x=>x.type==='wet').length,s=es.filter(x=>x.type==='stool').length;return `${w} nass · ${s} Stuhl`;},es=>[...es].sort((a,b)=>b.time-a.time).map(x=>`<div class="item"><div class="title">${x.type==='wet'?'Nasse Windel':'Stuhl'}</div><div class="text">${new Date(x.time).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</div><button class="danger" onclick="delBabyLog(${x.id})">×</button></div>`).join(''));
+};
+const _renderTemperature_v47=renderTemperature;
+renderTemperature=function(){
+  _renderTemperature_v47(); const host=$('temperatureHistory'); if(!host)return;
+  const list=[...(D.temperatures||[])].sort((a,b)=>b.time-a.time),groups=groupByDay(list,x=>x.time),site={rectal:'rektal',axillary:'axillär',ear:'Ohr',other:'sonstige'};
+  host.innerHTML=daySections(groups,es=>{const vals=es.map(x=>Number(x.temp)),lo=Math.min(...vals),hi=Math.max(...vals),range=lo===hi?`${lo.toFixed(1)} °C`:`${lo.toFixed(1)}–${hi.toFixed(1)} °C`;return `${es.length} ${es.length===1?'Messung':'Messungen'} · ${range}`;},es=>`<table><tr><th>Zeit</th><th>Temp.</th><th>Messort</th><th></th></tr>${[...es].sort((a,b)=>b.time-a.time).map(x=>`<tr><td>${new Date(x.time).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</td><td>${Number(x.temp).toFixed(1)} °C</td><td>${site[x.site]||'sonstige'}</td><td><button class="danger" onclick="deleteTemperature(${x.id})">×</button></td></tr>`).join('')}</table>`);
+};
+const _renderWeight_v47=renderWeight;
+renderWeight=function(){
+  _renderWeight_v47(); const host=$('history'); if(!host||!(D.weights||[]).length)return;
+  const list=[...(D.weights||[])].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id),groups=groupByDay(list,x=>x.date);
+  host.innerHTML=daySections(groups,es=>{const x=[...es].sort((a,b)=>b.id-a.id)[0],parts=[];if(es.length>1)parts.push(`${es.length} Messungen`);parts.push(`${x.w} g`);if(x.h)parts.push(`${Number(x.h).toFixed(1).replace('.',',')} cm`);if(x.hc)parts.push(`KU ${Number(x.hc).toFixed(1).replace('.',',')} cm`);return parts.join(' · ');},es=>`<table><tr><th>Zeit/LT</th><th>Gewicht</th><th>Länge</th><th>Kopf</th><th>WHO</th><th></th></tr>${[...es].sort((a,b)=>b.id-a.id).map(x=>{const a=growthPercentile('weight',x.w,x.date),b=x.h?growthPercentile('length',x.h,x.date):null,c=x.hc?growthPercentile('head',x.hc,x.date):null;return`<tr><td>LT ${day(x.date)+1}</td><td>${x.w} g</td><td>${x.h?x.h+' cm':'–'}</td><td>${x.hc?x.hc+' cm':'–'}</td><td>${a?'G '+fmtP(a):'–'}${b?' · L '+fmtP(b):''}${c?' · K '+fmtP(c):''}</td><td><button class="danger" onclick="delWeight(${x.id})">×</button></td></tr>`}).join('')}</table>`);
+};
+
+render();
+if(typeof window.refreshAnalgesiaUI==='function')window.refreshAnalgesiaUI();
 </script>
 
 </body></html>
