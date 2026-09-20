@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="5.3"><title>Wochenbett Begleiter</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-version" content="5.3.3"><title>Wochenbett Begleiter</title><style>
 :root{
   --bg1:#fbf7f8;
   --bg2:#f5f2f7;
@@ -743,12 +743,13 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
 @keyframes navFlash{0%{box-shadow:0 0 0 0 rgba(185,95,126,.38)}45%{box-shadow:0 0 0 5px rgba(185,95,126,.14)}100%{box-shadow:0 0 0 0 rgba(185,95,126,0)}}
 
 .diaper-modal{position:fixed;inset:0;background:rgba(35,25,30,.38);z-index:10020;display:none;align-items:center;justify-content:center;padding:22px}.diaper-modal.on{display:flex}.diaper-dialog{width:min(430px,100%);background:#fff;border-radius:20px;padding:20px;box-shadow:0 18px 55px rgba(0,0,0,.25)}.diaper-dialog h2{margin:0 0 7px}.diaper-dialog .diaper-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.diaper-dialog .diaper-options button{min-height:52px}.diaper-dialog .skip{grid-column:1/-1}
-</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v5.3</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
+</style><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#d8899f"></head><body><div class="wrap" style="position:relative"><button class="settings-gear" aria-label="Einstellungen" title="Einstellungen" onclick="openSettings(false)">⚙︎</button><h1>Wochenbett</h1><div class="sub" id="headsub">Baby und Mama · persönlicher Zeitplan · v5.3.1</div><div class="tabs"><button class="on" data-v="today">Heute</button><button data-v="feedingTimer">Stillen</button><button data-v="baby">Baby</button><button data-v="mama" aria-label="Mama: heute"><span class="nav-parent">Mama:</span>heute</button><button data-v="mamaAnalgesia" aria-label="Mama: Analgesie"><span class="nav-parent">Mama:</span>Analgesie</button><button data-v="timeline">Plan</button></div>
 <section id="today" class="view on"><div class="card"><h2>Heute auf einen Blick</h2><div id="todaySummary"></div><div id="wakeStatus" style="margin-top:12px"></div></div><div class="card"><h2>Schnell erfassen</h2><div class="quickgrid"><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('weight').focus(),50)">⚖︎ Gewicht</button><button class="secondary" onclick="activateTab('feedingTimer')">Stilltimer</button><button class="secondary" onclick="quickDiaper('wet')">Nasse Windel</button><button class="secondary" onclick="quickDiaper('stool')">Stuhl</button><button class="secondary" onclick="activateTab('mamaAnalgesia')">Analgesie</button><button class="secondary" onclick="activateTab('baby');setTimeout(()=>document.getElementById('babyCheck').scrollIntoView({behavior:'smooth'}),50)">Baby-Check</button></div><div id="todayQuickStats"></div></div><div class="card"><h2>Was heute ansteht</h2><div id="todayTasks"></div></div></section>
 <section id="feedingTimer" class="view"><div class="section-kicker">Stillen</div>
   <div class="card"><h2>Stilltimer</h2><p class="small">Seite antippen zum Starten, denselben Button erneut antippen zum Stoppen. Beim Wechsel auf die andere Seite wird der laufende Abschnitt automatisch beendet und die andere Seite gestartet.</p>
-    <div class="timer-readout" id="feedTimerClock">00:00</div><div class="timer-state" id="feedTimerState">Kein Timer aktiv</div><div class="timer-state" id="feedLastSide" style="margin-top:5px;font-weight:650"></div><div class="timer-state" id="feedNextDeadline" style="margin-top:3px"></div><div id="feedAlarmActions" style="display:none;margin-top:10px"></div>
+    <div class="timer-readout" id="feedTimerClock">00:00</div><div class="timer-state" id="feedTimerState">Kein Timer aktiv</div>
     <div class="feed-timer-grid"><button type="button" class="feedTimerBtn" id="feedLeftBtn" onclick="toggleFeedTimer('L')">Links<span class="side">antippen zum Starten/Stoppen</span></button><button type="button" class="feedTimerBtn" id="feedRightBtn" onclick="toggleFeedTimer('R')">Rechts<span class="side">antippen zum Starten/Stoppen</span></button></div>
+    <div class="timer-state" id="feedLastSide" style="margin-top:12px;font-weight:650"></div><div class="timer-state" id="feedNextDeadline" style="margin-top:3px"></div><div id="feedAlarmActions" style="display:none;margin-top:10px"></div>
   </div>
   <div class="card"><h2>Heute</h2><div id="feedingDailyStats"></div><p class="small">Stillabschnitte mit höchstens 30 Minuten Pause werden für die Tagesübersicht als eine Stillmahlzeit zusammengefasst.</p></div>
   <div class="card"><h2>Stillvorgang nachtragen</h2><p class="small">Für vergessene Timer-Einträge. Seite, Datum sowie Start- und Endzeit eintragen.</p><div class="grid"><div><label>Seite</label><select id="manualFeedSide"><option value="L">Links</option><option value="R">Rechts</option></select></div><div><label>Datum</label><input id="manualFeedDate" type="date"></div><div><label>Start</label><input id="manualFeedStart" type="time"></div><div><label>Ende</label><input id="manualFeedEnd" type="time"></div></div><div class="actions"><button class="primary" onclick="addManualFeedingSession()">Stillvorgang speichern</button></div></div>
@@ -806,12 +807,12 @@ body.backup-pending .settings-sheet{padding-bottom:calc(160px + env(safe-area-in
     <div id="firstStartNote" class="firststart-note" style="display:none">
       Bitte einmal die Stammdaten eintragen. Danach erreichst du diesen Bereich nur noch über das Zahnrad oben rechts.
     </div>
-    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Stillabstände</h2><p class="small">Alle Abstände werden ab dem <b>Ende</b> eines Stillvorgangs berechnet. Die App zeigt drei getrennte Weckervorschläge: Mahlzeitenabstand, maximaler Abstand derselben Brust und eine kombinierte Variante. Für die kombinierte Berechnung wird eine Stilldauer von 30 Minuten angenommen; der maximale Brustabstand ist die harte Grenze.</p><div class="grid"><div><label>Tag ab</label><input id="feedDayStart" type="time" value="06:00"></div><div><label>Nacht ab</label><input id="feedNightStart" type="time" value="22:00"></div><div><label>Max. Abstand Tag in h</label><input id="feedDayHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="3"></div><div><label>Max. Abstand Nacht in h</label><input id="feedNightHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="4"></div><div><label>Max. Abstand je Brust in h</label><input id="feedSideMaxHours" type="number" inputmode="decimal" step="0.25" min="0.5" max="24" value="8"></div><div><label>Mindestabstand Mahlzeiten in h</label><input id="feedMinMealHours" type="number" inputmode="decimal" step="0.25" min="0" max="12" value="2"></div></div><div class="item" style="margin-top:12px"><label style="display:flex;gap:10px;align-items:flex-start"><input id="diaperPromptOnFeedStart" type="checkbox" style="width:auto;margin-top:2px"><span><b>Beim Start des Stilltimers nach Windel fragen</b><br><span class="small">Zeigt nach dem Start die Auswahl Überspringen, Nass, Stuhl oder Nass &amp; Stuhl.</span></span></label></div><div class="actions"><button class="primary" onclick="saveFeedingSchedule()">Stillabstände speichern</button></div><div id="feedingScheduleStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v5.3</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
+    <div class="card"><h2>Stammdaten</h2><div class="grid"><div><label>Name Baby</label><input id="name"></div><div><label>Geschlecht</label><select id="sex"><option value="">Bitte wählen</option><option value="female">weiblich</option><option value="male">männlich</option></select></div><div><label>Geburtsdatum</label><input id="dob" type="date"></div><div><label>Geburtsgewicht in g</label><input id="bw" type="number"></div><div><label>Geburtslänge in cm, optional</label><input id="bl" type="number" inputmode="decimal" step="0.1"></div><div><label>Geburtszeit, optional</label><input id="btime" type="time"></div><div><label>Entlassungsdatum, optional</label><input id="discharge" type="date"></div><div><label>Ernährung</label><select id="feeding"><option value="stillen">Stillen</option><option value="flasche">Flasche</option><option value="kombiniert">Kombiniert</option></select></div></div><div class="actions"><button class="primary" onclick="saveProfile()">Stammdaten speichern</button></div><div id="storageStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Stillabstände</h2><p class="small">Alle Abstände werden ab dem <b>Ende</b> eines Stillvorgangs berechnet. Die App zeigt drei getrennte Weckervorschläge: Mahlzeitenabstand, maximaler Abstand derselben Brust und eine kombinierte Variante. Für die kombinierte Berechnung wird eine Stilldauer von 30 Minuten angenommen; der maximale Brustabstand ist die harte Grenze.</p><div class="grid"><div><label>Tag ab</label><input id="feedDayStart" type="time" value="06:00"></div><div><label>Nacht ab</label><input id="feedNightStart" type="time" value="22:00"></div><div><label>Max. Abstand Tag in h</label><input id="feedDayHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="3"></div><div><label>Max. Abstand Nacht in h</label><input id="feedNightHours" type="number" inputmode="decimal" step="0.25" min="0.25" max="12" value="4"></div><div><label>Max. Abstand je Brust in h</label><input id="feedSideMaxHours" type="number" inputmode="decimal" step="0.25" min="0.5" max="24" value="8"></div><div><label>Mindestabstand Mahlzeiten in h</label><input id="feedMinMealHours" type="number" inputmode="decimal" step="0.25" min="0" max="12" value="2"></div></div><div class="item" style="margin-top:12px"><label style="display:flex;gap:10px;align-items:flex-start"><input id="diaperPromptOnFeedStart" type="checkbox" style="width:auto;margin-top:2px"><span><b>Beim Start des Stilltimers nach Windel fragen</b><br><span class="small">Zeigt nach dem Start die Auswahl Überspringen, Nass, Stuhl oder Nass &amp; Stuhl.</span></span></label></div><div class="actions"><button class="primary" onclick="saveFeedingSchedule()">Stillabstände speichern</button></div><div id="feedingScheduleStatus" class="small" style="margin-top:9px"></div></div><div class="card"><h2>Termine und Untersuchungen erledigt?</h2><div id="hospital"></div></div><div class="card"><h2>Speicherstatus</h2><div id="storageOverview" class="item"></div></div><div class="card"><h2>App</h2><div class="item"><div class="title">Version <span id="appVersion">v5.3.3</span></div><div class="text" id="updateStatus">Updates werden in der veröffentlichten PWA über die feste GitHub-Pages-Adresse geprüft.</div></div><div class="actions"><button class="secondary" onclick="checkForAppUpdate()">Nach Update suchen</button><button class="secondary" id="applyUpdateBtn" onclick="applyAppUpdate()" style="display:none">Neue Version laden</button></div></div><div class="card"><h2>Daten sichern</h2><div class="actions"><button class="secondary" onclick="exportJSON()">Backup exportieren</button><button class="secondary" onclick="exportCSV()">CSV exportieren</button><button class="secondary" onclick="document.getElementById('importFile').click()">Backup importieren</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></div><div class="actions"><button class="danger" onclick="resetAll()">Alle Daten löschen</button></div><p class="small"><b>Speicherung:</b> In der installierten GitHub-Pages-PWA werden Änderungen automatisch lokal auf diesem iPhone gespeichert. Der JSON-Export ist eine zusätzliche Sicherung. Der Backup-Hinweis erscheint höchstens einmal pro Kalendertag und nur, wenn das letzte Backup mindestens 24 Stunden zurückliegt.</p></div>
   </div>
 </div>
 <p class="small">Die App dient Dokumentation und Orientierung. Bei krankem Gesamteindruck, Trinkschwäche, auffälliger Schläfrigkeit, Fieber, Atemproblemen, starker Blutung, Thoraxschmerz, Dyspnoe, einseitiger Beinschwellung oder anderen akuten Warnzeichen nicht auf einen App Termin warten.</p></div>
 <div id="diaperPromptModal" class="diaper-modal" role="dialog" aria-modal="true" aria-labelledby="diaperPromptTitle"><div class="diaper-dialog"><h2 id="diaperPromptTitle">Windelinhalt</h2><div class="small">Was war beim Stillstart in der Windel?</div><div class="diaper-options"><button class="secondary" onclick="recordFeedStartDiaper('wet')">Nass</button><button class="secondary" onclick="recordFeedStartDiaper('stool')">Stuhl</button><button class="primary" onclick="recordFeedStartDiaper('both')">Nass &amp; Stuhl</button><button class="secondary skip" onclick="closeFeedStartDiaperPrompt()">Überspringen</button></div></div></div><script>
-const APP_VERSION='5.3';
+const APP_VERSION='5.3.3';
 const K='wochenbett_v3';const DATA_VERSION=8;let D={dataVersion:DATA_VERSION,profile:{name:'',sex:'',dob:'',bw:'',bl:'',btime:'',discharge:'',feeding:'stillen'},weights:[],temperatures:[],babyLog:[],feedingSessions:[],feedingTimer:{side:null,start:null},feedingSchedule:{dayHours:3,nightHours:4,sideMaxHours:8,minMealHours:2,dayStart:'06:00',nightStart:'22:00'},diaperPromptOnFeedStart:true,hospital:{u1:false,pulse:false,screen:false,hear:false,u2:false,k1:false,k2:false},checks:{},state:{scar:false}};
 try{const x=JSON.parse(localStorage.getItem(K));if(x)D={...D,...x,profile:{...D.profile,...(x.profile||{})},hospital:{...D.hospital,...(x.hospital||{})},state:{...D.state,...(x.state||{})},checks:x.checks||{},temperatures:Array.isArray(x.temperatures)?x.temperatures:[],babyLog:Array.isArray(x.babyLog)?x.babyLog:[],feedingSessions:Array.isArray(x.feedingSessions)?x.feedingSessions:[],feedingTimer:x.feedingTimer&&typeof x.feedingTimer==='object'?x.feedingTimer:{side:null,start:null},feedingSchedule:{...D.feedingSchedule,...(x.feedingSchedule||{})}}}catch(e){}
 // Datenmigration: alte v3.x-Daten bleiben kompatibel; neue Felder werden ergänzt.
@@ -1096,23 +1097,58 @@ function feedingAlarmSuggestions(){
   if(t.side&&Number.isFinite(Number(t.start)))return {active:true};
   const ctx=latestFeedingContext();if(!ctx||!ctx.lastSession)return null;
   const c=feedingScheduleConfig(),last=ctx.lastSession,lastEnd=Number(ctx.mealEnd);
-  // 1) Reiner Mahlzeitenabstand: nach Ende der letzten Mahlzeit, Brust im Wechsel.
+  // 1) Reiner Mahlzeitenabstand: ausschließlich ab dem TATSÄCHLICHEN Ende der letzten Mahlzeit.
   const ri=feedingDeadlineInfo(lastEnd);
   const meal={type:'meal',raw:ri.raw,side:last.side==='L'?'R':'L',hours:ri.hours,period:ri.period};
-  // 2) Reiner Brustabstand: die zuerst fällige harte Grenze beider Brüste.
+  // 2) Reiner Brustabstand: harte Grenze ab dem TATSÄCHLICH dokumentierten Ende des letzten Stillens je Brust.
+  const sideDeadlines={};
   const breastCandidates=[];
-  for(const side of ['L','R']){const x=lastSessionForSide(side);if(x)breastCandidates.push({type:'breast',raw:Number(x.end)+c.sideMaxHours*3600000,side,hours:c.sideMaxHours,lastEnd:Number(x.end)});}
+  for(const side of ['L','R']){
+    const x=lastSessionForSide(side);
+    if(x){
+      const d=Number(x.end)+c.sideMaxHours*3600000;
+      sideDeadlines[side]={raw:d,lastEnd:Number(x.end)};
+      breastCandidates.push({type:'breast',raw:d,side,hours:c.sideMaxHours,lastEnd:Number(x.end)});
+    }
+  }
   breastCandidates.sort((a,b)=>a.raw-b.raw);
   const breast=breastCandidates[0]||null;
-  // 3) Kombiniert: 30 min angenommene Stilldauer. Ziel ist, die fällige Brust bis zur harten Brustgrenze fertig zu stillen.
-  // Der Mindestabstand wird ab Ende der letzten Mahlzeit bis zum Beginn der nächsten gerechnet. Bei Konflikt gewinnt die Brustgrenze.
+
+  // 3) Kombiniert.
+  // Rückblickend werden ausschließlich die tatsächlich dokumentierten Endzeiten benutzt.
+  // Die 30-min-Annahme wird erst für die noch unbekannte Zukunft verwendet: Dauer der NÄCHSTEN
+  // Mahlzeit und der ÜBERNÄCHSTEN Mahlzeit, um deren Abstand und die nächste harte Brustgrenze vorauszuplanen.
   let combined=null;
-  if(breast){
-    const assumedDuration=30*60000;
-    const latestStart=breast.raw-assumedDuration;
-    const minAllowedStart=lastEnd+c.minMealHours*3600000;
+  const nextSide=meal.side, overNextSide=nextSide==='L'?'R':'L';
+  const assumedDuration=30*60000, minGap=c.minMealHours*3600000;
+  if(sideDeadlines[nextSide]){
+    // Nächste Mahlzeit muss an nextSide spätestens bis zu deren harter Grenze beendet sein.
+    const nextBreastLatestStart=sideDeadlines[nextSide].raw-assumedDuration;
+    // Der tatsächliche letzte Mahlzeiten-Endpunkt bestimmt den frühestmöglichen nächsten Start.
+    const minAllowedStart=lastEnd+minGap;
+    // Zusätzlich so planen, dass nach einer angenommenen 30-min-NÄCHSTEN Mahlzeit noch der
+    // Mindestabstand zur ÜBERNÄCHSTEN Mahlzeit möglich ist und diese (30 min angenommen)
+    // ihre harte Brustgrenze einhält.
+    let overNextConstraint=Infinity, overNextDeadline=null;
+    if(sideDeadlines[overNextSide]){
+      overNextDeadline=sideDeadlines[overNextSide].raw;
+      const overNextLatestStart=overNextDeadline-assumedDuration;
+      overNextConstraint=overNextLatestStart-minGap-assumedDuration;
+    }
+    const latestStart=Math.min(nextBreastLatestStart,overNextConstraint);
+    const limiting=overNextConstraint<nextBreastLatestStart?'overnext':'next';
     const conflict=latestStart<minAllowedStart;
-    combined={type:'combined',raw:latestStart,side:breast.side,breastDeadline:breast.raw,minAllowedStart,conflict,minMealHours:c.minMealHours,assumedMinutes:30};
+    combined={type:'combined',raw:latestStart,side:nextSide,nextBreastDeadline:sideDeadlines[nextSide].raw,
+      overNextSide,overNextDeadline,minAllowedStart,conflict,minMealHours:c.minMealHours,
+      assumedMinutes:30,limiting,actualLastEnd:lastEnd};
+  }else if(breast){
+    // Falls für die regulär nächste Brust noch keine Historie existiert, bleibt die vorhandene
+    // harte Brustgrenze die beste verfügbare Grundlage.
+    const latestStart=breast.raw-assumedDuration,minAllowedStart=lastEnd+minGap;
+    combined={type:'combined',raw:latestStart,side:breast.side,nextBreastDeadline:breast.raw,
+      overNextSide:breast.side==='L'?'R':'L',overNextDeadline:null,minAllowedStart,
+      conflict:latestStart<minAllowedStart,minMealHours:c.minMealHours,assumedMinutes:30,
+      limiting:'next',actualLastEnd:lastEnd};
   }
   return {active:false,lastSession:last,meal,breast,combined};
 }
@@ -1129,13 +1165,26 @@ function runFeedingAlarmShortcut(type){
   window.location.href=url;
 }
 function alarmTimeText(raw){return new Date(roundDeadlineDown15(raw)).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}
-function alarmSuggestionHTML(a){
+function alarmSuggestionCompactHTML(a){
   if(!a)return '';
   const side=a.side==='L'?'LINKS':'RECHTS',time=alarmTimeText(a.raw);
-  if(a.type==='meal')return `<div class="item"><div class="title">Mahlzeitenabstand · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">${a.period} · ${String(a.hours).replace('.',',')} h ab Ende der letzten Mahlzeit · Brust im Wechsel</div><div class="actions"><button type="button" class="secondary" onclick="runFeedingAlarmShortcut('meal')">Wecker ${time} · ${side}</button></div></div>`;
-  if(a.type==='breast')return `<div class="item"><div class="title">Gleiche Brust · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">Harte Grenze: ${String(a.hours).replace('.',',')} h ab Ende des letzten Stillens an ${side}</div><div class="actions"><button type="button" class="secondary" onclick="runFeedingAlarmShortcut('breast')">Wecker ${time} · ${side}</button></div></div>`;
+  const label=a.type==='breast'?'Gleiche Brust':a.type==='meal'?'Mahlzeitenabstand':'Kombiniert';
+  const warning=a.type==='combined'&&a.conflict?' ⚠️':'';
+  return `<button type="button" class="secondary" style="width:100%;margin:0 0 8px;text-align:left" onclick="runFeedingAlarmShortcut('${a.type}')"><b>${label} · ${side}: ${time} Uhr${warning}</b></button>`;
+}
+function alarmSuggestionDetailHTML(a){
+  if(!a)return '';
+  const side=a.side==='L'?'LINKS':'RECHTS',time=alarmTimeText(a.raw);
+  if(a.type==='meal')return `<div class="item"><div class="title">Mahlzeitenabstand · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">${a.period} · ${String(a.hours).replace('.',',')} h ab Ende der letzten Mahlzeit · Brust im Wechsel</div></div>`;
+  if(a.type==='breast')return `<div class="item"><div class="title">Gleiche Brust · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">Harte Grenze: ${String(a.hours).replace('.',',')} h ab Ende des letzten Stillens an ${side}</div></div>`;
   const warn=a.conflict?`<div class="status warn" style="margin-top:8px"><b>Mindestabstand unterschritten.</b> Um die harte Brustgrenze einzuhalten, muss früher gestillt werden als nach dem eingestellten Mindestabstand von ${String(a.minMealHours).replace('.',',')} h.</div>`:'';
-  return `<div class="item"><div class="title">Kombiniert · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">Spätester Start, damit ${side} bei angenommener Stilldauer von 30 min noch innerhalb des maximalen Brustabstands beendet wird. Mindestabstand: ${String(a.minMealHours).replace('.',',')} h.</div>${warn}<div class="actions"><button type="button" class="secondary" onclick="runFeedingAlarmShortcut('combined')">Wecker ${time} · ${side}</button></div></div>`;
+  const why=a.limiting==='overnext'&&a.overNextDeadline?` Maßgeblich ist dabei bereits die harte Grenze der übernächsten Mahlzeit an ${a.overNextSide==='L'?'LINKS':'RECHTS'}.`:'';
+  return `<div class="item"><div class="title">Kombiniert · <b>${time} Uhr</b> · <b>${side}</b></div><div class="text">Vergangene Mahlzeiten werden mit ihren tatsächlichen Endzeiten berechnet. Erst für die nächste → übernächste Planung werden 30 min Stilldauer angenommen. Mindestabstand: ${String(a.minMealHours).replace('.',',')} h.${why}</div>${warn}</div>`;
+}
+function alarmSuggestionsHTML(all){
+  const buttons=alarmSuggestionCompactHTML(all.breast)+alarmSuggestionCompactHTML(all.meal)+alarmSuggestionCompactHTML(all.combined);
+  const details=alarmSuggestionDetailHTML(all.breast)+alarmSuggestionDetailHTML(all.meal)+alarmSuggestionDetailHTML(all.combined);
+  return `${buttons}<details style="margin-top:4px"><summary style="cursor:pointer;font-weight:700;padding:8px 2px">Details zu den Weckervorschlägen</summary><div style="margin-top:8px">${details}</div></details>`;
 }
 function renderFeedingTimer(){
   const t=D.feedingTimer||{side:null,start:null},lb=$('feedLeftBtn'),rb=$('feedRightBtn'),clock=$('feedTimerClock'),state=$('feedTimerState'),lastEl=$('feedLastSide'),deadlineEl=$('feedNextDeadline'),alarmActions=$('feedAlarmActions');
@@ -1154,7 +1203,7 @@ function renderFeedingTimer(){
     }else if(alarmSet){
       deadlineEl.innerHTML='<b>Drei Weckervorschläge</b><br><span class="small">Alle Ausgangsabstände werden ab dem Ende der dokumentierten Mahlzeiten berechnet.</span>';
       deadlineEl.style.color='';
-      if(alarmActions){alarmActions.style.display='block';alarmActions.innerHTML=alarmSuggestionHTML(alarmSet.breast)+alarmSuggestionHTML(alarmSet.meal)+alarmSuggestionHTML(alarmSet.combined);}
+      if(alarmActions){alarmActions.style.display='block';alarmActions.innerHTML=alarmSuggestionsHTML(alarmSet);}
     }else{deadlineEl.textContent='';deadlineEl.style.color='';if(alarmActions){alarmActions.style.display='none';alarmActions.innerHTML='';}}
   }
   if(clock)clock.textContent=t.side&&t.start?fmtDur(Date.now()-t.start).replace(' min',''):'00:00';
@@ -1802,4 +1851,4 @@ function deleteDiaperEvent(ids){const a=String(ids).split(',').map(Number);if(co
 
 </body></html>
 
-<!-- v5.3: drei Stillwecker-Vorschläge: Brustabstand, Mahlzeitenabstand, kombiniert mit Mindestabstand und 30-min-Annahme. -->
+<!-- v5.3.3: kompakte Weckervorschläge; Details standardmäßig eingeklappt. -->
